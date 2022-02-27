@@ -1,7 +1,8 @@
 {
-    "startTime":"2021-05-02 17:45",
-    "endTime":"2021-05-02 17:50",
+    "startTime":"2022-02-23 07:53",
+    "endTime":"2022-02-23 08:00",
     "minError":400,
     "maxError":999,
-    "time-taken-threshold":500
+    "sc-statusIndexFromBack":999,
+    "timeTakenThreshold":500
 }

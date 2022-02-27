@@ -9,7 +9,7 @@ This is proto-type to filter the W3C format logs.
 - run the following command
 
 ``` cmd
-python filterlog.py
+python main.py
 ```
 
 - select filter format
