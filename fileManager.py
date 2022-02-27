@@ -8,6 +8,16 @@ def readLogFile(file_name):
     return data
 
 def outputFile(write_text, write_file):
+    xlsxFlag = getSetting()["Output2Excel"]
+    if xlsxFlag==True:
+        print("Output .xlsx")
+        outputLogFile(write_text, write_file)
+        outputXlsxFile(write_text, write_file)
+    else:
+        print("Output plane log")
+        outputLogFile(write_text, write_file)
+
+def outputLogFile(write_text, write_file):
     ''' ファイル書き込み '''
     write_file = './output/' +write_file
     with open(write_file,'a') as file:
@@ -21,9 +31,10 @@ def outputXlsxFile(write_text, write_file):
     write_text = write_text.replace(" ",",")
     with open(write_file,'a') as file:
         file.write(write_text)
+    print("Output the file : "+write_file)
     data = pd.read_csv(write_file)
     data.to_excel(write_file+'.xlsx', encoding='utf-8')
-    print("Output the file : "+write_file)
+    print("Output the file : "+write_file+'.xlsx')
 
 def getSetting():
     ''' jsonファイルから情報取得 '''

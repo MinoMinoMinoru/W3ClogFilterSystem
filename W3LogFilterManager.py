@@ -93,8 +93,9 @@ def filterLogByFlag(logData,flag,inputFileName):
         ''' 時間でのみフィルター '''
         filteredLogData =filterLogByTerm(logData)
         outputFileName = filterName4Term+inputFileName
+
         fileManager.outputFile(fileformat + filteredLogData,outputFileName)
-        fileManager.outputXlsxFile(fileformat + filteredLogData,outputFileName)
+        # fileManager.outputXlsxFile(fileformat + filteredLogData,outputFileName)
 
     elif(flag==1):
         ''' 時間でフィルターしたものを Status Code と time-taken それぞれでフィルター '''

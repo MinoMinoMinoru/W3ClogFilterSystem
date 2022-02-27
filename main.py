@@ -4,10 +4,18 @@ import os
 def main():
     filelist=os.listdir("./input")
     print("Filter next log:",filelist[0])
+
     # input directoryの先頭ファイルを読み込む
     inputFileName = filelist[0]
     logData = fileManager.readLogFile("./input/"+inputFileName)
-    
+
+    settings = fileManager.getSetting()
+    print("Now Settings")
+    print("--------")
+    print("Term: ",settings["startTime"] +"～" + settings["endTime"])
+    print("StatusCode: ",str(settings["minError"]) +"～" + str(settings["maxError"]))
+    print("OutPut Excel(.xlsx) File: ", settings["Output2Excel"] )
+    print("--------")
     descriptions = fileManager.readLogFile("description.txt")
     print(descriptions)
 
