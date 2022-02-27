@@ -4,15 +4,15 @@ This is proto-type to filter the W3C format logs.
 
 # How to use
 
-- input the log file at "./input" directory
-- edit "setting.json"
-- run the following command
+- Input the log file at "./input" directory(if not exite,please make directory)
+- Edit "setting.json" (Descripted after)
+- Run the following command
 
 ``` cmd
-python filterlog.py
+python3 main.py
 ```
 
-- select filter format
+- Select filter format
 
 0. Filter by term(yyy/mm/dd HH:MM)
 1. Filter by each of "sc-status" and "time-taken" term after filtering term
@@ -21,10 +21,24 @@ python filterlog.py
 4. Filter by "sc-status"
 5. Filter by "time-taken"
 
-- check "output" directory
+- Check "output" directory
+
+# About setting json
+
+
+| setting | description |
+|---|-------|
+|startTime|Filter log form this time|
+|endTime|Filter log to this time|
+|minError|Filter log form this status code|
+|maxError|Filter log to this status code|
+|Output2Excel|true or flase. If true, output formats are .log/.csv/.xlsx. If false, output format is .log only.|
+|timeTakenThreshold|Not Used now(2022/2)|
+
+
 
 # pip modules
 
-- os
-- json
 - statistics
+- openpyxl
+- pandas
