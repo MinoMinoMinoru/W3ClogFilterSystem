@@ -94,42 +94,42 @@ def filterLogByFlag(logData,flag,inputFileName):
         filteredLogData =filterLogByTerm(logData)
         outputFileName = filterName4Term+inputFileName
 
-        fileManager.outputFile(fileformat + filteredLogData,outputFileName)
+        fileManager.outputIISFile(fileformat + filteredLogData,outputFileName)
         # fileManager.outputXlsxFile(fileformat + filteredLogData,outputFileName)
 
     elif(flag==1):
         ''' 時間でフィルターしたものを Status Code と time-taken それぞれでフィルター '''
         filteredLogData =filterLogByTerm(logData)
         outputFileName = filterName4Term+inputFileName
-        fileManager.outputFile(fileformat + filteredLogData+"\r",outputFileName)
+        fileManager.outputIISFile(fileformat + filteredLogData+"\r",outputFileName)
 
         LogDataFilteredByStatusCode = filterLogByStatusCode(filteredLogData,statusIndex)
         outputFileNameByStatusCode = filterName4Status+outputFileName
-        fileManager.outputFile(fileformat + LogDataFilteredByStatusCode+"\r",outputFileNameByStatusCode)
+        fileManager.outputIISFile(fileformat + LogDataFilteredByStatusCode+"\r",outputFileNameByStatusCode)
         
         LogDataFilteredByTimeTaken = filterLogByTimetaken(filteredLogData,timeTakenIndex)
         outputFileNameByTimeTaken = filterName4Time+outputFileName
-        fileManager.outputFile(fileformat + LogDataFilteredByTimeTaken+"\r",outputFileNameByTimeTaken)
+        fileManager.outputIISFile(fileformat + LogDataFilteredByTimeTaken+"\r",outputFileNameByTimeTaken)
 
     elif(flag==2):
         ''' 時間と Status Code でフィルター '''
         filteredLogData =filterLogByTerm(logData)
         outputFileName = filterName4Term+inputFileName
-        fileManager.outputFile(fileformat + filteredLogData+"\r",outputFileName)
+        fileManager.outputIISFile(fileformat + filteredLogData+"\r",outputFileName)
 
         filteredLogData = filterLogByStatusCode(filteredLogData,statusIndex)
         outputFileName = filterName4Status+outputFileName
-        fileManager.outputFile(fileformat + filteredLogData+"\r",outputFileName)
+        fileManager.outputIISFile(fileformat + filteredLogData+"\r",outputFileName)
 
     elif(flag==3):
         ''' 時間と time-taken でフィルター '''
         filteredLogData =filterLogByTerm(logData)
         outputFileName = filterName4Term+inputFileName
-        fileManager.outputFile(fileformat + filteredLogData+"\r",outputFileName)
+        fileManager.outputIISFile(fileformat + filteredLogData+"\r",outputFileName)
 
         filteredLogData = filterLogByTimetaken(filteredLogData,timeTakenIndex)
         outputFileName = filterName4Time+outputFileName
-        fileManager.outputFile(fileformat + filteredLogData+"\r",outputFileName)
+        fileManager.outputIISFile(fileformat + filteredLogData+"\r",outputFileName)
 
     elif(flag==4):
         ''' Status Code だけでフィルター '''
@@ -137,7 +137,7 @@ def filterLogByFlag(logData,flag,inputFileName):
 
         filteredLogData = filterLogByStatusCode(filteredLogData,statusIndex)
         outputFileName = filterName4Status+inputFileName
-        fileManager.outputFile(fileformat + filteredLogData+"\r",outputFileName)
+        fileManager.outputIISFile(fileformat + filteredLogData+"\r",outputFileName)
     
     elif(flag==5):
         ''' time-taken だけでフィルター '''
@@ -145,7 +145,7 @@ def filterLogByFlag(logData,flag,inputFileName):
 
         filteredLogData = filterLogByTimetaken(filteredLogData,timeTakenIndex)
         outputFileName = filterName4Time+inputFileName
-        fileManager.outputFile(fileformat + filteredLogData+"\r",outputFileName)
+        fileManager.outputIISFile(fileformat + filteredLogData+"\r",outputFileName)
 
     elif(flag==-99):
         print("test")

@@ -7,34 +7,34 @@ def readLogFile(file_name):
     f.close()
     return data
 
-def outputFile(write_text, write_file):
+def outputIISFile(writeText, writeFile):
     xlsxFlag = getSetting()["Output2Excel"]
     if xlsxFlag==True:
         print("Output .xlsx")
-        outputLogFile(write_text, write_file)
-        outputXlsxFile(write_text, write_file)
+        outputLogFile(writeText, writeFile)
+        outputXlsxFile(writeText, writeFile)
     else:
         print("Output plane log")
-        outputLogFile(write_text, write_file)
+        outputLogFile(writeText, writeFile)
 
-def outputLogFile(write_text, write_file):
+def outputLogFile(writeText, writeFile):
     ''' ファイル書き込み '''
-    write_file = './output/' +write_file
-    with open(write_file,'a') as file:
-        file.write(write_text)
-    print("Output the file : "+write_file)
+    writeFile = './output/iislog/' + writeFile
+    with open(writeFile,'a') as file:
+        file.write(writeText)
+    print("Output the file : "+writeFile)
 
-def outputXlsxFile(write_text, write_file):
+def outputXlsxFile(writeText, writeFile):
     ''' .xlsx ファイル書き込み '''
     '''pandas.core.frame.DataFrame という type を使うので csv にしてから変換'''
-    write_file = './output/' +write_file +'.csv'
-    write_text = write_text.replace(" ",",")
-    with open(write_file,'a') as file:
-        file.write(write_text)
-    print("Output the file : "+write_file)
-    data = pd.read_csv(write_file)
-    data.to_excel(write_file+'.xlsx', encoding='utf-8')
-    print("Output the file : "+write_file+'.xlsx')
+    writeFile = './output/iislog/'+writeFile +'.csv'
+    writeText = writeText.replace(" ",",")
+    with open(writeFile,'a') as file:
+        file.write(writeText)
+    print("Output the file : "+writeFile)
+    data = pd.read_csv(writeFile)
+    data.to_excel(writeFile+'.xlsx', encoding='utf-8')
+    print("Output the file : "+writeFile+'.xlsx')
 
 def getSetting():
     ''' jsonファイルから情報取得 '''

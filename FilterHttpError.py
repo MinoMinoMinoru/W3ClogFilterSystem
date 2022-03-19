@@ -1,13 +1,13 @@
-import fileManager,FilterManager.iisLogFilterManager as iisLogFilterManager
+import fileManager,iisLogFilterManager
 import os
 
 def main():
-    filelist=os.listdir("./input/iislog/")
+    filelist=os.listdir("./input/W3/")
     print("Filter next log:",filelist[0])
 
     # input directoryの先頭ファイルを読み込む
     inputFileName = filelist[0]
-    logData = fileManager.readLogFile("./input/W3/"+inputFileName)
+    logData = fileManager.readLogFile("./input/httperror/"+inputFileName)
 
     settings = fileManager.getSetting()
     print("Now Settings")
