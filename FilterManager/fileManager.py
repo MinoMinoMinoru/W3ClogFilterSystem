@@ -7,6 +7,13 @@ def readLogFile(file_name):
     f.close()
     return data
 
+def outputReport(writeText, writeFile):
+    ''' ファイル書き込み '''
+    writeFile = '../output/' + writeFile
+    with open(writeFile,'a') as file:
+        file.write(writeText)
+    print("Output the file : "+writeFile)
+
 def outputHttpErrorFile(writeText, writeFile):
     ''' ファイル書き込み '''
     writeFile = '../output/httperrorlog/' + writeFile
