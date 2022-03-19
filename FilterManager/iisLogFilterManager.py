@@ -34,11 +34,35 @@ def getTimeTakenThreshold(logData,timeTakenIndex):
 
 def filterLogByTerm(logData):
     ''' 指定期間でフィルター(input/return:string)'''
+    startTime = settings["startTime"]
+    endTime = settings["endTime"]
+    
     # startTime より後ろを切り取る
-    idx = logData.find(settings["startTime"])
+    # print(startTime)
+    while(True):
+        idx = logData.find(startTime)
+        if(idx!= -1):
+            print("Fitler from " + startTime)
+            break
+        date_value = dt.datetime.strptime(startTime, '%Y-%m-%d %H:%M')
+        date_value = date_value + dt.timedelta(minutes=-1)
+        startTime  = date_value.strftime('%Y-%m-%d %H:%M')
+        continue
+
     logData = logData[idx:]
+
     # endTime より前を切り取る
-    idx = logData.find(settings["endTime"])
+    # print(endTime)
+    while(True):
+        idx = logData.find(endTime)
+        if(idx!= -1):
+            print("Fitler to " + endTime)
+            break
+        date_value = dt.datetime.strptime(endTime, '%Y-%m-%d %H:%M')
+        date_value = date_value + dt.timedelta(minutes=1)
+        endTime  = date_value.strftime('%Y-%m-%d %H:%M')
+        continue
+    # idx = logData.find(settings["endTime"])
     return logData[:idx]
 
 def filterLogByStatusCode(logData,statusIndex):

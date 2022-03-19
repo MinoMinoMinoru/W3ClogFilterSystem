@@ -16,7 +16,7 @@ def main():
     print("StatusCode: ",str(settings["minError"]) +"～" + str(settings["maxError"]))
     print("OutPut Excel(.xlsx) File: ", settings["Output2Excel"] )
     print("--------")
-    descriptions = fileManager.readLogFile("description.txt")
+    descriptions = fileManager.readLogFile("./FilterManager/description.txt")
     print(descriptions)
 
     while(True):

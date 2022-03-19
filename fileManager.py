@@ -7,6 +7,13 @@ def readLogFile(file_name):
     f.close()
     return data
 
+def outputHttpErrorFile(writeText, writeFile):
+    ''' ファイル書き込み '''
+    writeFile = './output/httperrorlog/' + writeFile
+    with open(writeFile,'a') as file:
+        file.write(writeText)
+    print("Output the file : "+writeFile)
+
 def outputIISFile(writeText, writeFile):
     xlsxFlag = getSetting()["Output2Excel"]
     if xlsxFlag==True:

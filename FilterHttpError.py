@@ -1,22 +1,24 @@
-import fileManager,iisLogFilterManager
+import fileManager,FilterManager.httpErrorLogFilterManager as httpErrorLogFilterManager
 import os
 
 def main():
-    filelist=os.listdir("./input/W3/")
+    filelist=os.listdir("./input/httperrorlog/")
     print("Filter next log:",filelist[0])
 
     # input directoryの先頭ファイルを読み込む
     inputFileName = filelist[0]
-    logData = fileManager.readLogFile("./input/httperror/"+inputFileName)
+    logData = fileManager.readLogFile("./input/httperrorlog/"+inputFileName)
 
     settings = fileManager.getSetting()
     print("Now Settings")
     print("--------")
     print("Term: ",settings["startTime"] +"～" + settings["endTime"])
-    print("StatusCode: ",str(settings["minError"]) +"～" + str(settings["maxError"]))
+
+    # starttime = settings["startTime"]
+    # print("StatusCode: ",str(settings["minError"]) +"～" + str(settings["maxError"]))
     print("OutPut Excel(.xlsx) File: ", settings["Output2Excel"] )
     print("--------")
-    descriptions = fileManager.readLogFile("description.txt")
+    descriptions = fileManager.readLogFile("./FilterManager/description.txt")
     print(descriptions)
 
     while(True):
@@ -25,7 +27,7 @@ def main():
             flag = int(inputString)
             print(flag)
             if(flag<len(descriptions.split("\n"))-1):
-                iisLogFilterManager.filterLogByFlag(logData,flag,inputFileName)
+                httpErrorLogFilterManager.filterLogByFlag(logData,flag,inputFileName)
                 break
             else:
                 print(str(len(descriptions.split("\n"))-2)+"以下の整数を入力してください。")
