@@ -1,5 +1,5 @@
 from statistics import mean,stdev
-import fileManager
+import FilterManager.fileManager as fileManager
 import datetime as dt
 
 ''' 初期設定 '''

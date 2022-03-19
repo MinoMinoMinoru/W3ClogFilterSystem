@@ -1,4 +1,4 @@
-import fileManager,FilterManager.iisLogFilterManager as iisLogFilterManager
+import FilterManager.fileManager as fileManager,FilterManager.iisLogFilterManager as iisLogFilterManager
 import os
 
 def main():
@@ -7,7 +7,7 @@ def main():
 
     # input directoryの先頭ファイルを読み込む
     inputFileName = filelist[0]
-    logData = fileManager.readLogFile("./input/W3/"+inputFileName)
+    logData = fileManager.readLogFile("./input/iislog/"+inputFileName)
 
     settings = fileManager.getSetting()
     print("Now Settings")
