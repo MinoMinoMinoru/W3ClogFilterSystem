@@ -1,0 +1,20 @@
+https://docs.microsoft.com/en-us/troubleshoot/developer/webapps/iis/www-administration-management/http-status-code#:~:text=HTTP%20%E3%83%97%E3%83%AD%E3%83%88%E3%82%B3%E3%83%AB%E3%82%92%E4%BD%BF%E7%94%A8%E3%81%97%E3%81%A6%20%E3%80%81%20%28IIS%29%207.0%E3%80%817.5%20%E4%BB%A5%E9%99%8D%E3%81%AE%E3%83%90%E3%83%BC%E3%82%B8%E3%83%A7%E3%83%B3%E3%82%92%E5%AE%9F%E8%A1%8C%E3%81%97%E3%81%A6%E3%81%84%E3%82%8B%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E4%B8%8A%E3%81%AE%E3%82%B3%E3%83%B3%E3%83%86%E3%83%B3%E3%83%84%E3%81%AB%E3%82%A2%E3%82%AF%E3%82%BB%E3%82%B9%E3%81%99%E3%82%8B%E3%81%A8%E3%80%81IIS%20%E3%81%AF%E5%BF%9C%E7%AD%94%E3%81%AE%E7%8A%B6%E6%85%8B%E3%82%92%E7%A4%BA%E3%81%99%E6%95%B0%E5%80%A4%E3%82%B3%E3%83%BC%E3%83%89%E3%82%92%E8%BF%94%E3%81%97%E3%81%BE%E3%81%99%E3%80%82%20HTTP,%E3%82%B9%E3%83%86%E3%83%BC%E3%82%BF%E3%82%B9%20%E3%82%B3%E3%83%BC%E3%83%89%E3%81%8C%E3%82%AF%E3%83%A9%E3%82%A4%E3%82%A2%E3%83%B3%E3%83%88%20%E3%83%96%E3%83%A9%E3%82%A6%E3%82%B6%E3%83%BC%E3%81%AB%E8%A1%A8%E7%A4%BA%E3%81%95%E3%82%8C%E3%82%8B%E5%A0%B4%E5%90%88%E3%81%8C%E3%81%82%E3%82%8A%E3%81%BE%E3%81%99%E3%80%82%20HTTP%20%E7%8A%B6%E6%85%8B%E3%82%B3%E3%83%BC%E3%83%89%E3%81%AF%E3%80%81%E8%A6%81%E6%B1%82%E3%81%8C%E6%88%90%E5%8A%9F%E3%81%97%E3%81%9F%E3%81%AE%E3%81%8B%E5%A4%B1%E6%95%97%E3%81%97%E3%81%9F%E3%81%AE%E3%81%8B%E3%82%92%E7%A4%BA%E3%81%97%E3%81%A6%E3%81%84%E3%82%8B%E5%A0%B4%E5%90%88%E3%81%8C%E3%81%82%E3%82%8A%E3%81%BE%E3%81%99%E3%80%82%20HTTP%20%E3%82%B9%E3%83%86%E3%83%BC%E3%82%BF%E3%82%B9%20%E3%82%B3%E3%83%BC%E3%83%89%E3%81%AF%E3%80%81%E8%A6%81%E6%B1%82%E3%81%8C%E5%A4%B1%E6%95%97%E3%81%97%E3%81%9F%E6%AD%A3%E7%A2%BA%E3%81%AA%E7%90%86%E7%94%B1%E3%82%92%E6%98%8E%E3%82%89%E3%81%8B%E3%81%AB%E3%81%99%E3%82%8B%E5%A0%B4%E5%90%88%E3%81%8C%E3%81%82%E3%82%8A%E3%81%BE%E3%81%99%E3%80%82
+
+400.1 - Invalid Destination Header.
+400.2 - Invalid Depth Header.
+400.3 - Invalid If Header.
+400.4 - Invalid Overwrite Header.
+400.5 - Invalid Translate Header.
+400.6 - Invalid Request Body.
+400.7 - Invalid Content Length.
+400.8 - Invalid Timeout.
+400.9 - Invalid Lock Token.
+401.1 - Logon failed.
+401.2 - Logon failed due to server configuration.
+401.3 - Unauthorized due to ACL on resource.
+401.4 - Authorization failed by filter.
+401.5 - Authorization failed by ISAPI/CGI application.
+401.501 - Access Denied: Too many requests from the same client IP; Dynamic IP Restriction Concurrent request rate limit reached.
+401.502 - Forbidden: Too many requests from the same client IP; Dynamic IP Restriction Maximum request rate limit reached.
+401.503 - Access Denied: the IP address is included in the Deny list of IP Restriction
+401.504 - Access Denied: the host name is included in the Deny list of IP Restriction

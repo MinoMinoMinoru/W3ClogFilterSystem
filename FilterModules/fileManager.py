@@ -9,14 +9,14 @@ def readLogFile(file_name):
 
 def outputReport(writeText, writeFile):
     ''' ファイル書き込み '''
-    writeFile = '../output/' + writeFile
+    writeFile = './output/' + writeFile
     with open(writeFile,'a') as file:
         file.write(writeText)
     print("Output the file : "+writeFile)
 
 def outputHttpErrorFile(writeText, writeFile):
     ''' ファイル書き込み '''
-    writeFile = '../output/httperrorlog/' + writeFile
+    writeFile = './output/httperrorlog/' + writeFile
     with open(writeFile,'a') as file:
         file.write(writeText)
     print("Output the file : "+writeFile)
@@ -33,7 +33,7 @@ def outputIISFile(writeText, writeFile):
 
 def outputLogFile(writeText, writeFile):
     ''' ファイル書き込み '''
-    writeFile = '../output/iislog/' + writeFile
+    writeFile = './output/iislog/' + writeFile
     with open(writeFile,'a') as file:
         file.write(writeText)
     print("Output the file : "+writeFile)
@@ -41,7 +41,7 @@ def outputLogFile(writeText, writeFile):
 def outputXlsxFile(writeText, writeFile):
     ''' .xlsx ファイル書き込み '''
     '''pandas.core.frame.DataFrame という type を使うので csv にしてから変換'''
-    writeFile = '../output/iislog/'+writeFile +'.csv'
+    writeFile = './output/iislog/'+writeFile +'.csv'
     writeText = writeText.replace(" ",",")
     with open(writeFile,'a') as file:
         file.write(writeText)
@@ -52,7 +52,7 @@ def outputXlsxFile(writeText, writeFile):
 
 def getSetting():
     ''' jsonファイルから情報取得 '''
-    f = open("../setting.json", 'r')
+    f = open("./setting.json", 'r')
     json_body = json.load(f)
     f.close()
     return json_body

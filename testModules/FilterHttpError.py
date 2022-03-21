@@ -5,12 +5,12 @@ import FilterModules.fileManager as fileManager
 import FilterModules.httpErrorLogFilterModules as httpErrorLogFilterModules
 
 def main():
-    filelist=os.listdir("../input/httperrorlog/")
+    filelist=os.listdir("./input/httperrorlog/")
     print("Filter next log:",filelist[0])
 
     # input directoryの先頭ファイルを読み込む
     inputFileName = filelist[0]
-    logData = fileManager.readLogFile("../input/httperrorlog/"+inputFileName)
+    logData = fileManager.readLogFile("./input/httperrorlog/"+inputFileName)
 
     settings = fileManager.getSetting()
     print("Now Settings")
@@ -21,7 +21,7 @@ def main():
     # print("StatusCode: ",str(settings["minError"]) +"～" + str(settings["maxError"]))
     print("OutPut Excel(.xlsx) File: ", settings["Output2Excel"] )
     print("--------")
-    descriptions = fileManager.readLogFile("../FilterModules/resources/description.txt")
+    descriptions = fileManager.readLogFile("./FilterModules/resources/description.txt")
     print(descriptions)
 
     while(True):
@@ -39,5 +39,3 @@ def main():
             print(ValueError)
     
     print("Finished")
-
-main()

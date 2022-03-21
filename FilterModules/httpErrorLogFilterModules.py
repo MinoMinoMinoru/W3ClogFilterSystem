@@ -1,5 +1,6 @@
-import FilterModules.fileManager as fileManager
 import datetime as dt
+
+import FilterModules.fileManager as fileManager
 
 ''' 初期設定 '''
 settings = fileManager.getSetting()
@@ -72,7 +73,7 @@ def analyseHttpErrorLog(filteredData,reasonIndex):
 
 def getOfficialDescriptions():
     # memos = fileManager.readLogFile('./httpErrors.txt')
-    memos = fileManager.readLogFile("../FilterModules/resources/httpErrors.txt")
+    memos = fileManager.readLogFile("./FilterModules/resources/httpErrors.txt")
     tmp = memos.split("\n")
     errorTypes =[]
     errorDescriptions =[]
@@ -107,6 +108,7 @@ def filterLogByFlag(logData,flag,inputFileName):
         filteredLogData =filterLogByTerm(logData)
         outputFileName = filterName4Term+inputFileName
         fileManager.outputHttpErrorFile(fileformat + filteredLogData,outputFileName)
+        
     if(flag==1):
         ''' Simple Report Test '''
         filteredLogData =filterLogByTerm(logData)

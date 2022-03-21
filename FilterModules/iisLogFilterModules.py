@@ -1,6 +1,8 @@
 from statistics import mean,stdev
-import FilterModules.fileManager as fileManager
 import datetime as dt
+
+import FilterModules.fileManager as fileManager
+import AnalyseModules.iisLogAnalyseModules as iisLogAnalyseModules
 
 ''' 初期設定 '''
 settings = fileManager.getSetting()
@@ -78,14 +80,13 @@ def filterLogByStatusCode(logData,statusIndex):
     while(index<len(logDatasPerLine)-1):
         sc_status = int(logDatasPerLine[index].split(" ")[statusIndex])
         if(minStatusCode<=sc_status and sc_status<=maxStatusCode):
-            outputData += logDatasPerLine[index]+"\r"
+            outputData += logDatasPerLine[index]+"\n"
         index=index+1
 
     return outputData
 
 def filterLogByTimetaken(logData,timeTakenIndex):
     '''  time-taken でフィルター(input:string,int/return string)'''
-    # 1 line 毎に条件を確認するため split
     logDatasPerLine=logData.split("\n")
     mean,stdev,threshold=getTimeTakenThreshold(logDatasPerLine,timeTakenIndex)
     
@@ -100,78 +101,82 @@ def filterLogByTimetaken(logData,timeTakenIndex):
     while(index<len(logDatasPerLine)-1):
         timeTaken = int(logDatasPerLine[index].split(" ")[timeTakenIndex])
         if(threshold<=timeTaken):
-            outputData += logDatasPerLine[index]+"\r"
+            outputData += logDatasPerLine[index]+"\n"
         index=index+1
 
     return outputData
 
-def analyseHttpErrorLog(filteredData,statusIndex,timeTakenIndex):
-    # 1 line 毎に条件を確認するため split
+def analyseIISLog(filteredData,statusIndex,subStatusIndex,win32StatusIndex,timeTakenIndex):
     logDatasPerLine=filteredData.split("\n")
-    requestsCount = len(logDatasPerLine)
+
+    minStatusCode,maxStatusCode = settings["minError"],settings["maxError"]
     mean,stdev,threshold=getTimeTakenThreshold(logDatasPerLine,timeTakenIndex)
 
-    longCount = 0
+    requestsCount = len(logDatasPerLine)
+    index,longCount,errorCount = 0,0,0
+    filteredByTimeTakenData,filteredByStatusCodeData = "",""
 
-    index =0
     # 最後に空行が入っているから調整
     while(index<len(logDatasPerLine)-1):
         timeTaken = int(logDatasPerLine[index].split(" ")[timeTakenIndex])
+        sc_status = int(logDatasPerLine[index].split(" ")[statusIndex])
+
+        if(minStatusCode<=sc_status and sc_status<=maxStatusCode):
+            filteredByStatusCodeData += logDatasPerLine[index]+"\n"
+            errorCount += 1
         if(threshold<=timeTaken):
-            outputData += logDatasPerLine[index]+"\r"
+            filteredByTimeTakenData += logDatasPerLine[index]+"\n"
             longCount +=1
-        index=index+1
-    print("allRequests: "+ requestsCount)
-    print("longCount: " + longCount)
+        index+=1
+    
+    reportText = iisLogAnalyseModules.getBasicInfoReport(requestsCount,errorCount,longCount,mean,stdev,threshold)
+    reportText += iisLogAnalyseModules.analyseLogFilteredbyStatus(filteredByStatusCodeData,statusIndex,subStatusIndex,win32StatusIndex)
+    print(reportText)
 
 def filterLogByFlag(logData,flag,inputFileName):
 
     fileformat = logData.split("\n")[3]
     fieldElements = fileformat.split(" ")    
     statusIndex = fieldElements.index("sc-status")-1
+    subStatusIndex = fieldElements.index("sc-substatus")-1
+    win32StatusIndex = fieldElements.index("sc-win32-status")-1
     timeTakenIndex = fieldElements.index("time-taken")-1
-    fileformat += '\r'
+    fileformat += '\n'
+
+    filteredLogData =filterLogByTerm(logData)
+    outputFileName = filterName4Term+inputFileName
 
     if(flag==0):
         ''' 時間でのみフィルター '''
-        filteredLogData =filterLogByTerm(logData)
-        outputFileName = filterName4Term+inputFileName
-
         fileManager.outputIISFile(fileformat + filteredLogData,outputFileName)
 
     elif(flag==1):
         ''' 時間でフィルターしたものを Status Code と time-taken それぞれでフィルター '''
-        filteredLogData =filterLogByTerm(logData)
-        outputFileName = filterName4Term+inputFileName
-        fileManager.outputIISFile(fileformat + filteredLogData+"\r",outputFileName)
+        fileManager.outputIISFile(fileformat + filteredLogData+"\n",outputFileName)
 
         LogDataFilteredByStatusCode = filterLogByStatusCode(filteredLogData,statusIndex)
         outputFileNameByStatusCode = filterName4Status+outputFileName
-        fileManager.outputIISFile(fileformat + LogDataFilteredByStatusCode+"\r",outputFileNameByStatusCode)
+        fileManager.outputIISFile(fileformat + LogDataFilteredByStatusCode+"\n",outputFileNameByStatusCode)
         
         LogDataFilteredByTimeTaken = filterLogByTimetaken(filteredLogData,timeTakenIndex)
         outputFileNameByTimeTaken = filterName4Time+outputFileName
-        fileManager.outputIISFile(fileformat + LogDataFilteredByTimeTaken+"\r",outputFileNameByTimeTaken)
+        fileManager.outputIISFile(fileformat + LogDataFilteredByTimeTaken+"\n",outputFileNameByTimeTaken)
 
     elif(flag==2):
         ''' 時間と Status Code でフィルター '''
-        filteredLogData =filterLogByTerm(logData)
-        outputFileName = filterName4Term+inputFileName
-        fileManager.outputIISFile(fileformat + filteredLogData+"\r",outputFileName)
+        fileManager.outputIISFile(fileformat + filteredLogData+"\n",outputFileName)
 
         filteredLogData = filterLogByStatusCode(filteredLogData,statusIndex)
         outputFileName = filterName4Status+outputFileName
-        fileManager.outputIISFile(fileformat + filteredLogData+"\r",outputFileName)
+        fileManager.outputIISFile(fileformat + filteredLogData+"\n",outputFileName)
 
     elif(flag==3):
         ''' 時間と time-taken でフィルター '''
-        filteredLogData =filterLogByTerm(logData)
-        outputFileName = filterName4Term+inputFileName
-        fileManager.outputIISFile(fileformat + filteredLogData+"\r",outputFileName)
+        fileManager.outputIISFile(fileformat + filteredLogData+"\n",outputFileName)
 
         filteredLogData = filterLogByTimetaken(filteredLogData,timeTakenIndex)
         outputFileName = filterName4Time+outputFileName
-        fileManager.outputIISFile(fileformat + filteredLogData+"\r",outputFileName)
+        fileManager.outputIISFile(fileformat + filteredLogData+"\n",outputFileName)
 
     elif(flag==4):
         ''' Status Code だけでフィルター '''
@@ -179,7 +184,7 @@ def filterLogByFlag(logData,flag,inputFileName):
 
         filteredLogData = filterLogByStatusCode(filteredLogData,statusIndex)
         outputFileName = filterName4Status+inputFileName
-        fileManager.outputIISFile(fileformat + filteredLogData+"\r",outputFileName)
+        fileManager.outputIISFile(fileformat + filteredLogData+"\n",outputFileName)
     
     elif(flag==5):
         ''' time-taken だけでフィルター '''
@@ -187,9 +192,8 @@ def filterLogByFlag(logData,flag,inputFileName):
 
         filteredLogData = filterLogByTimetaken(filteredLogData,timeTakenIndex)
         outputFileName = filterName4Time+inputFileName
-        fileManager.outputIISFile(fileformat + filteredLogData+"\r",outputFileName)
+        fileManager.outputIISFile(fileformat + filteredLogData+"\n",outputFileName)
 
     elif(flag==-99):
-        print("test")
-        filteredLogData =filterLogByTerm(logData)
-        analyseHttpErrorLog(filteredLogData,statusIndex,timeTakenIndex)
+        print("test flag")
+        analyseIISLog(filteredLogData,statusIndex,subStatusIndex,win32StatusIndex,timeTakenIndex)

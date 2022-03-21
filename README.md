@@ -7,6 +7,7 @@ This is proto-type to filter the W3C format logs.
 - Input the log file at "./input" directories(if not exite,please make directory)
     - "/input/httperrolog" directory
     - "/input/iislog" directory
+- Create "./output" directories
 - Edit "setting.json" (Descripted after)
 - Run the following command
 
