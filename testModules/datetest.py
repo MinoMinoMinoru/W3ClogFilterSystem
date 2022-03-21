@@ -1,4 +1,5 @@
-import FilterManager.fileManager as fileManager,FilterManager.httpErrorLogFilterManager as httpErrorLogFilterManager
+import FilterModules.fileManager as fileManager
+import FilterModules.httpErrorLogFilterModules as httpErrorLogFilterModules
 import datetime as dt
 
 def main():
