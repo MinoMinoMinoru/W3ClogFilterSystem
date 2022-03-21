@@ -4,7 +4,9 @@ This is proto-type to filter the W3C format logs.
 
 # How to use
 
-- Input the log file at "./input" directory(if not exite,please make directory)
+- Input the log file at "./input" directories(if not exite,please make directory)
+    - "/input/httperrolog" directory
+    - "/input/iislog" directory
 - Edit "setting.json" (Descripted after)
 - Run the following command
 

@@ -1,4 +1,4 @@
-import FilterManager.fileManager as fileManager,FilterManager.iisLogFilterManager as iisLogFilterManager
+import FilterModules.fileManager as fileManager,FilterModules.iisLogFilterModules as iisLogFilterModules
 import os
 
 def main():
@@ -16,7 +16,7 @@ def main():
     print("StatusCode: ",str(settings["minError"]) +"～" + str(settings["maxError"]))
     print("OutPut Excel(.xlsx) File: ", settings["Output2Excel"] )
     print("--------")
-    descriptions = fileManager.readLogFile("description.txt")
+    descriptions = fileManager.readLogFile("./FilterModules/resources/description.txt")
     print(descriptions)
 
     while(True):
@@ -25,7 +25,7 @@ def main():
             flag = int(inputString)
             print(flag)
             if(flag<len(descriptions.split("\n"))-1):
-                iisLogFilterManager.filterLogByFlag(logData,flag,inputFileName)
+                iisLogFilterModules.filterLogByFlag(logData,flag,inputFileName)
                 break
             else:
                 print(str(len(descriptions.split("\n"))-2)+"以下の整数を入力してください。")

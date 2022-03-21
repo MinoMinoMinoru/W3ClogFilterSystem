@@ -1,5 +1,5 @@
 from statistics import mean,stdev
-import FilterManager.fileManager as fileManager
+import FilterModules.fileManager as fileManager
 import datetime as dt
 
 ''' 初期設定 '''
@@ -27,11 +27,8 @@ def getTimeTakenThreshold(logData,timeTakenIndex):
         timeTaken=int(logData[index].split(" ")[timeTakenIndex])
         timeTakens.append(timeTaken)
         index=index+1
-    
-    print("Mean:",mean(timeTakens))
-    print("StDev:",stdev(timeTakens))
-    print("Threshold:",int(mean(timeTakens)+stdev(timeTakens)))
-    return int(mean(timeTakens)+stdev(timeTakens))
+
+    return int(mean(timeTakens)),int(stdev(timeTakens)),int(mean(timeTakens)+stdev(timeTakens))
 
 def filterLogByTerm(logData):
     ''' 指定期間でフィルター(input/return:string)'''
@@ -75,8 +72,8 @@ def filterLogByStatusCode(logData,statusIndex):
     maxStatusCode = settings["maxError"]
 
     outputData = ""
-
     index =0
+
     # 最後に空行が入っているから調整
     while(index<len(logDatasPerLine)-1):
         sc_status = int(logDatasPerLine[index].split(" ")[statusIndex])
@@ -90,12 +87,15 @@ def filterLogByTimetaken(logData,timeTakenIndex):
     '''  time-taken でフィルター(input:string,int/return string)'''
     # 1 line 毎に条件を確認するため split
     logDatasPerLine=logData.split("\n")
-
-    threshold=getTimeTakenThreshold(logDatasPerLine,timeTakenIndex)
+    mean,stdev,threshold=getTimeTakenThreshold(logDatasPerLine,timeTakenIndex)
+    
+    print("Mean:",mean)
+    print("Standard Deviation:",stdev)
+    print("Threshold:",threshold)
 
     outputData = ""
-
     index =0
+
     # 最後に空行が入っているから調整
     while(index<len(logDatasPerLine)-1):
         timeTaken = int(logDatasPerLine[index].split(" ")[timeTakenIndex])
@@ -105,13 +105,31 @@ def filterLogByTimetaken(logData,timeTakenIndex):
 
     return outputData
 
+def analyseHttpErrorLog(filteredData,statusIndex,timeTakenIndex):
+    # 1 line 毎に条件を確認するため split
+    logDatasPerLine=filteredData.split("\n")
+    requestsCount = len(logDatasPerLine)
+    mean,stdev,threshold=getTimeTakenThreshold(logDatasPerLine,timeTakenIndex)
+
+    longCount = 0
+
+    index =0
+    # 最後に空行が入っているから調整
+    while(index<len(logDatasPerLine)-1):
+        timeTaken = int(logDatasPerLine[index].split(" ")[timeTakenIndex])
+        if(threshold<=timeTaken):
+            outputData += logDatasPerLine[index]+"\r"
+            longCount +=1
+        index=index+1
+    print("allRequests: "+ requestsCount)
+    print("longCount: " + longCount)
+
 def filterLogByFlag(logData,flag,inputFileName):
 
     fileformat = logData.split("\n")[3]
     fieldElements = fileformat.split(" ")    
-    
-    timeTakenIndex = fieldElements.index("time-taken")-1
     statusIndex = fieldElements.index("sc-status")-1
+    timeTakenIndex = fieldElements.index("time-taken")-1
     fileformat += '\r'
 
     if(flag==0):
@@ -120,7 +138,6 @@ def filterLogByFlag(logData,flag,inputFileName):
         outputFileName = filterName4Term+inputFileName
 
         fileManager.outputIISFile(fileformat + filteredLogData,outputFileName)
-        # fileManager.outputXlsxFile(fileformat + filteredLogData,outputFileName)
 
     elif(flag==1):
         ''' 時間でフィルターしたものを Status Code と time-taken それぞれでフィルター '''
@@ -175,4 +192,4 @@ def filterLogByFlag(logData,flag,inputFileName):
     elif(flag==-99):
         print("test")
         filteredLogData =filterLogByTerm(logData)
-        print(filteredLogData[0])
+        analyseHttpErrorLog(filteredLogData,statusIndex,timeTakenIndex)

@@ -1,5 +1,4 @@
-from statistics import mean,stdev
-import FilterManager.fileManager as fileManager
+import FilterModules.fileManager as fileManager
 import datetime as dt
 
 ''' 初期設定 '''
@@ -19,7 +18,6 @@ def removeFields(logData):
 
 def filterLogByTerm(logData):
     ''' 指定期間でフィルター(input/return:string)'''
-    
     startTime = settings["startTime"]
     endTime = settings["endTime"]
     
@@ -55,7 +53,7 @@ def analyseHttpErrorLog(filteredData,reasonIndex):
     errorTypes,errorCounts,errorDescriptions = [],[],[]
     officialErrors,officialErrorDescriptions = getOfficialDescriptions()
 
-     # 1 line 毎に条件を確認するため split
+    # 1 line 毎に条件を確認するため split
     logDatasPerLine=filteredData.split("\n")
 
     index =0
@@ -72,29 +70,9 @@ def analyseHttpErrorLog(filteredData,reasonIndex):
         index+=1
     return errorTypes,errorCounts,errorDescriptions
 
-def filterLogByStatusCode(logData,statusIndex):
-    ''' ステータス コードでフィルター(input:string,int/return string)'''
-    # 1 line 毎に条件を確認するため split
-    logDatasPerLine=logData.split("\n")
-
-    minStatusCode = settings["minError"]
-    maxStatusCode = settings["maxError"]
-
-    outputData = ""
-
-    index =0
-    # 最後に空行が入っているから調整
-    while(index<len(logDatasPerLine)-1):
-        sc_status = int(logDatasPerLine[index].split(" ")[statusIndex])
-        if(minStatusCode<=sc_status and sc_status<=maxStatusCode):
-            outputData += logDatasPerLine[index]+"\r"
-        index=index+1
-
-    return outputData
-
 def getOfficialDescriptions():
     # memos = fileManager.readLogFile('./httpErrors.txt')
-    memos = fileManager.readLogFile("../FilterManager/httpErrors.txt")
+    memos = fileManager.readLogFile("../FilterModules/resources/httpErrors.txt")
     tmp = memos.split("\n")
     errorTypes =[]
     errorDescriptions =[]
@@ -107,8 +85,9 @@ def getOfficialDescriptions():
 
 def getHttpErrorReport(filteredLogData,reasonIndex):
     errorTypes,errorCounts,errorDescriptions = analyseHttpErrorLog(filteredLogData,reasonIndex)
-    ReportText = "Term: "+settings["startTime"] +"～" + settings["endTime"] +"\n"
-    ReportText += str("| ErrorType | Count | description |")+"\n"
+    ReportText = "# Http Error\n"
+    ReportText += "## Term\nFrom : "+settings["startTime"] +"\n\nTo : " + settings["endTime"] +"\n"
+    ReportText += "## Errors\n" + str("| ErrorType | Count | description |")+"\n"
     ReportText +=str("|---|---|-------|")+"\n"
     index=0
     while(index<len(errorTypes)):
@@ -124,12 +103,13 @@ def filterLogByFlag(logData,flag,inputFileName):
     fileformat += '\r'
 
     if(flag==0):
-        ''' 時間でのみフィルター '''
+        '''Filter by Term '''
         filteredLogData =filterLogByTerm(logData)
         outputFileName = filterName4Term+inputFileName
         fileManager.outputHttpErrorFile(fileformat + filteredLogData,outputFileName)
     if(flag==1):
+        ''' Simple Report Test '''
         filteredLogData =filterLogByTerm(logData)
         ReportText = getHttpErrorReport(filteredLogData,reasonIndex)
-        fileManager.outputReport(ReportText,"Report.md")
+        fileManager.outputReport(ReportText,"HttpErrorReport.md")
 
