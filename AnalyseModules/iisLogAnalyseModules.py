@@ -1,16 +1,8 @@
-def getBasicInfoReport(requestsCount,errorCount,longCount,mean,stdev,threshold):
-    ''' Return Report String '''
+def getBasicInfoReport(settings,startTime,endTime):
     reportText ="# IISLog\n"
-    reportText += "## StatusCode\n"
-    reportText += "errorCount/allRequests : "+str(errorCount)+"/"+str(requestsCount)+"\n"
-
-    reportText += "## Time-Taken\n"
-    reportText += "Mean : " + str(mean) +"\n" +"Standard Deviation : " + str(stdev) +"\n"+"Threshold : " + str(threshold) +"\n"
-    reportText += "longCount/allRequests : "+str(longCount)+"/"+str(requestsCount)+"\n"
+    reportText += "- Term : "+str(startTime) +" - " + str(endTime) +"\n"
+    reportText += "- StatusCode: "+ str(settings["minError"]) +" - " + str(settings["maxError"])+"\n"
     return reportText
-
-def analyseLogFilteredbyTimeTaken(filteredData):
-    print()
 
 def getSortedErrors(logDatasPerLine,statusIndex,subStatusIndex,win32StatusIndex):
     errors,statusCounts,results = [],[],[]
@@ -32,11 +24,10 @@ def getSortedErrors(logDatasPerLine,statusIndex,subStatusIndex,win32StatusIndex)
     while(index<len(errors)):
         results.append([errors[index],statusCounts[index]])
         index+=1
-
     results.sort()
     return results
 
-def analyseLogFilteredbyStatus(filteredData,statusIndex,subStatusIndex,win32StatusIndex):
+def analyseLogFilteredbyStatus(filteredData,statusIndex,subStatusIndex,win32StatusIndex,requestsCount):
     logDatasPerLine=filteredData.split("\n")
     
     results = getSortedErrors(logDatasPerLine,statusIndex,subStatusIndex,win32StatusIndex)
@@ -44,12 +35,26 @@ def analyseLogFilteredbyStatus(filteredData,statusIndex,subStatusIndex,win32Stat
     # ReportText = "## Errors\n" + str("| ErrorType | Count | description |")+"\n"
     # ReportText +=str("|---|---|-------|")+"\n"
     ReportText = "## Error Status Codes\n" 
-    ReportText += "Error Counts :" +str(len(logDatasPerLine)-1) +" \n"+ str("| Status Code | Count | ")+"\n"
+    ReportText += "Error Counts/All Counts : " +str(len(logDatasPerLine)-1) +"/" +str(requestsCount)+"\n"
+    ReportText += str("| Status Code | Count | ")+"\n"
     ReportText +=str("|---|-------|")+"\n"
     
     index = 0
     while(index<len(results)):
         ReportText +="|"+str(results[index][0]) +"|"+str(results[index][1]) +"|\n"
         index+=1
+    
     return ReportText
-    # print(ReportText)
+
+def analyseLogFilteredbyTimeTaken(logDatasPerLine,requestsCount,mean,stdev,threshold):
+    reportText = "## Slow Responses\n"
+    reportText += "Error Counts/All Counts :" +str(len(logDatasPerLine)-1) +"/" +str(requestsCount)+"\n"
+    reportText += "- Mean : " + str(mean) +"\n" +"- Standard Deviation : " + str(stdev) +"\n"+"- Threshold : " + str(threshold) +"\n"
+    return reportText
+
+def addReferences():
+    reportText = "# References\n"
+    reportText += "- [Status/SubStatus](https://docs.microsoft.com/en-us/troubleshoot/developer/webapps/iis/www-administration-management/http-status-code)\n"
+    reportText += "- [Win32Status](https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes--0-499-?redirectedfrom=MSDN#ERROR_BAD_COMMAND)\n"
+    reportText += "- [HTTPErrorLog](https://docs.microsoft.com/en-us/troubleshoot/developer/webapps/aspnet/site-behavior-performance/error-logging-http-apis)\n"
+    return reportText

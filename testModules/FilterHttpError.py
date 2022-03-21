@@ -39,3 +39,14 @@ def main():
             print(ValueError)
     
     print("Finished")
+
+def testAnalyse():
+    filelist=os.listdir("./input/httperrorlog/")
+    print("Filter next log:",filelist[0])
+
+    # input directoryの先頭ファイルを読み込む
+    inputFileName = filelist[0]
+    logData = fileManager.readLogFile("./input/httperrorlog/"+inputFileName)
+    flag = 1
+    return httpErrorLogFilterModules.filterLogByFlag(logData,flag,inputFileName)
+

@@ -44,6 +44,4 @@ def testAnalyse():
     inputFileName = filelist[0]
     logData = fileManager.readLogFile("./input/iislog/"+inputFileName)
     flag = -99
-    iisLogFilterModules.filterLogByFlag(logData,flag,inputFileName)
-
-    print("Finished")
+    return  iisLogFilterModules.filterLogByFlag(logData,flag,inputFileName)

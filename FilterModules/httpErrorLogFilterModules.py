@@ -19,36 +19,29 @@ def removeFields(logData):
 
 def filterLogByTerm(logData):
     ''' 指定期間でフィルター(input/return:string)'''
-    startTime = settings["startTime"]
-    endTime = settings["endTime"]
+    startTime,endTime = settings["startTime"],settings["endTime"]
     
     # startTime より後ろを切り取る
-    # print(startTime)
-    while(True):
-        idx = logData.find(startTime)
-        if(idx!= -1):
-            print("Fitler from " + startTime)
-            break
-        date_value = dt.datetime.strptime(startTime, '%Y-%m-%d %H:%M')
-        date_value = date_value + dt.timedelta(minutes=-1)
-        startTime  = date_value.strftime('%Y-%m-%d %H:%M')
-        continue
-
+    startTime,idx = getMatchTime(logData,startTime,-1)
     logData = logData[idx:]
-
     # endTime より前を切り取る
-    # print(endTime)
+    endTime,idx = getMatchTime(logData,endTime,1)
+    print("Fitler from " + startTime)
+    print("Fitler to " + endTime)
+
+    return startTime,endTime,logData[:idx]
+
+def getMatchTime(logData,targetTime,minutes):
     while(True):
-        idx = logData.find(endTime)
+        idx = logData.find(targetTime)
         if(idx!= -1):
-            print("Fitler to " + endTime)
+            matchTime = targetTime
             break
-        date_value = dt.datetime.strptime(endTime, '%Y-%m-%d %H:%M')
-        date_value = date_value + dt.timedelta(minutes=1)
-        endTime  = date_value.strftime('%Y-%m-%d %H:%M')
+        date_value = dt.datetime.strptime(targetTime, '%Y-%m-%d %H:%M')
+        date_value = date_value + dt.timedelta(minutes=minutes)
+        targetTime  = date_value.strftime('%Y-%m-%d %H:%M')
         continue
-    # idx = logData.find(settings["endTime"])
-    return logData[:idx]
+    return matchTime,idx
 
 def analyseHttpErrorLog(filteredData,reasonIndex):
     errorTypes,errorCounts,errorDescriptions = [],[],[]
@@ -84,17 +77,17 @@ def getOfficialDescriptions():
         index+=1
     return errorTypes,errorDescriptions
 
-def getHttpErrorReport(filteredLogData,reasonIndex):
+def getHttpErrorReport(filteredLogData,reasonIndex,startTime,endTime):
     errorTypes,errorCounts,errorDescriptions = analyseHttpErrorLog(filteredLogData,reasonIndex)
-    ReportText = "# Http Error\n"
-    ReportText += "## Term\nFrom : "+settings["startTime"] +"\n\nTo : " + settings["endTime"] +"\n"
-    ReportText += "## Errors\n" + str("| ErrorType | Count | description |")+"\n"
-    ReportText +=str("|---|---|-------|")+"\n"
+    reportText = "# Http Error\n"
+    reportText += "- Term  : "+str(startTime) +" - " + str(endTime) +"\n"
+    reportText += "## Errors\n" + str("| ErrorType | Count | description |")+"\n"
+    reportText +=str("|---|---|-------|")+"\n"
     index=0
     while(index<len(errorTypes)):
-        ReportText +="|"+errorTypes[index] +"|"+str(errorCounts[index]) +"|"+ errorDescriptions[index]+"|\n"
+        reportText +="|"+errorTypes[index] +"|"+str(errorCounts[index]) +"|"+ errorDescriptions[index]+"|\n"
         index+=1
-    return ReportText
+    return reportText
 
 def filterLogByFlag(logData,flag,inputFileName):
     # #Fields: date time c-ip c-port s-ip s-port cs-version cs-method cs-uri streamid sc-status s-siteid s-reason s-queuename 
@@ -103,15 +96,16 @@ def filterLogByFlag(logData,flag,inputFileName):
     reasonIndex = fieldElements.index("s-reason")-1
     fileformat += '\r'
 
+    startTime,endTime,filteredLogData =filterLogByTerm(logData)
+    outputFileName = filterName4Term+inputFileName
+
     if(flag==0):
         '''Filter by Term '''
-        filteredLogData =filterLogByTerm(logData)
-        outputFileName = filterName4Term+inputFileName
         fileManager.outputHttpErrorFile(fileformat + filteredLogData,outputFileName)
         
     if(flag==1):
         ''' Simple Report Test '''
-        filteredLogData =filterLogByTerm(logData)
-        ReportText = getHttpErrorReport(filteredLogData,reasonIndex)
-        fileManager.outputReport(ReportText,"HttpErrorReport.md")
+        reportText = getHttpErrorReport(filteredLogData,reasonIndex,startTime,endTime)
+        # fileManager.outputReport(reportText,"HttpErrorReport.md")
+        return str(reportText)
 

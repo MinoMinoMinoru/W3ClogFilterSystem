@@ -9,6 +9,7 @@ settings = fileManager.getSetting()
 filterName4Term ="[filterted_by_term]"
 filterName4Status = "[filterted_by_StatusCode]"
 filterName4Time="[filterted_by_time-taken]"
+minStatusCode,maxStatusCode = settings["minError"],settings["maxError"]
 ''' 初期設定 ここまで'''
 
 def removeFields(logData):
@@ -34,44 +35,36 @@ def getTimeTakenThreshold(logData,timeTakenIndex):
 
 def filterLogByTerm(logData):
     ''' 指定期間でフィルター(input/return:string)'''
-    startTime = settings["startTime"]
-    endTime = settings["endTime"]
+    startTime,endTime = settings["startTime"],settings["endTime"]
     
     # startTime より後ろを切り取る
-    # print(startTime)
-    while(True):
-        idx = logData.find(startTime)
-        if(idx!= -1):
-            print("Fitler from " + startTime)
-            break
-        date_value = dt.datetime.strptime(startTime, '%Y-%m-%d %H:%M')
-        date_value = date_value + dt.timedelta(minutes=-1)
-        startTime  = date_value.strftime('%Y-%m-%d %H:%M')
-        continue
-
+    startTime,idx = getMatchTime(logData,startTime,-1)
     logData = logData[idx:]
-
     # endTime より前を切り取る
-    # print(endTime)
+    endTime,idx = getMatchTime(logData,endTime,1)
+
+    print("Fitler from " + startTime)
+    print("Fitler to " + endTime)
+    
+    return startTime,endTime,logData[:idx]
+
+def getMatchTime(logData,targetTime,minutes):
+    ''' modify the time when filter time doesn't match the log '''
     while(True):
-        idx = logData.find(endTime)
+        idx = logData.find(targetTime)
         if(idx!= -1):
-            print("Fitler to " + endTime)
+            matchTime = targetTime
             break
-        date_value = dt.datetime.strptime(endTime, '%Y-%m-%d %H:%M')
-        date_value = date_value + dt.timedelta(minutes=1)
-        endTime  = date_value.strftime('%Y-%m-%d %H:%M')
+        date_value = dt.datetime.strptime(targetTime, '%Y-%m-%d %H:%M')
+        date_value = date_value + dt.timedelta(minutes=minutes)
+        targetTime  = date_value.strftime('%Y-%m-%d %H:%M')
         continue
-    # idx = logData.find(settings["endTime"])
-    return logData[:idx]
+    return matchTime,idx
 
 def filterLogByStatusCode(logData,statusIndex):
     ''' ステータス コードでフィルター(input:string,int/return string)'''
     # 1 line 毎に条件を確認するため split
     logDatasPerLine=logData.split("\n")
-
-    minStatusCode = settings["minError"]
-    maxStatusCode = settings["maxError"]
 
     outputData = ""
     index =0
@@ -106,10 +99,8 @@ def filterLogByTimetaken(logData,timeTakenIndex):
 
     return outputData
 
-def analyseIISLog(filteredData,statusIndex,subStatusIndex,win32StatusIndex,timeTakenIndex):
+def analyseIISLog(filteredData,statusIndex,subStatusIndex,win32StatusIndex,timeTakenIndex,startTime,endTime):
     logDatasPerLine=filteredData.split("\n")
-
-    minStatusCode,maxStatusCode = settings["minError"],settings["maxError"]
     mean,stdev,threshold=getTimeTakenThreshold(logDatasPerLine,timeTakenIndex)
 
     requestsCount = len(logDatasPerLine)
@@ -128,10 +119,11 @@ def analyseIISLog(filteredData,statusIndex,subStatusIndex,win32StatusIndex,timeT
             filteredByTimeTakenData += logDatasPerLine[index]+"\n"
             longCount +=1
         index+=1
-    
-    reportText = iisLogAnalyseModules.getBasicInfoReport(requestsCount,errorCount,longCount,mean,stdev,threshold)
-    reportText += iisLogAnalyseModules.analyseLogFilteredbyStatus(filteredByStatusCodeData,statusIndex,subStatusIndex,win32StatusIndex)
-    print(reportText)
+    reportText = iisLogAnalyseModules.addReferences()
+    reportText += iisLogAnalyseModules.getBasicInfoReport(settings,startTime,endTime)
+    reportText += iisLogAnalyseModules.analyseLogFilteredbyStatus(filteredByStatusCodeData,statusIndex,subStatusIndex,win32StatusIndex,requestsCount)
+    reportText += iisLogAnalyseModules.analyseLogFilteredbyTimeTaken(filteredByTimeTakenData,requestsCount,mean,stdev,threshold)
+    return reportText
 
 def filterLogByFlag(logData,flag,inputFileName):
 
@@ -143,7 +135,7 @@ def filterLogByFlag(logData,flag,inputFileName):
     timeTakenIndex = fieldElements.index("time-taken")-1
     fileformat += '\n'
 
-    filteredLogData =filterLogByTerm(logData)
+    startTime,endTime,filteredLogData =filterLogByTerm(logData)
     outputFileName = filterName4Term+inputFileName
 
     if(flag==0):
@@ -196,4 +188,5 @@ def filterLogByFlag(logData,flag,inputFileName):
 
     elif(flag==-99):
         print("test flag")
-        analyseIISLog(filteredLogData,statusIndex,subStatusIndex,win32StatusIndex,timeTakenIndex)
+        reportText = analyseIISLog(filteredLogData,statusIndex,subStatusIndex,win32StatusIndex,timeTakenIndex,startTime,endTime)
+        return str(reportText) 
