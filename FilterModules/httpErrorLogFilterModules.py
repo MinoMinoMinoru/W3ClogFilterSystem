@@ -109,3 +109,8 @@ def filterLogByFlag(logData,flag,inputFileName):
         # fileManager.outputReport(reportText,"HttpErrorReport.md")
         return str(reportText)
 
+    if(flag==100):
+        reportText = getHttpErrorReport(filteredLogData,reasonIndex,startTime,endTime)
+        fileManager.outputHttpErrorFile(fileformat + filteredLogData,outputFileName)
+        return str(reportText)
+

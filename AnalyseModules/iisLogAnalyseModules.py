@@ -12,6 +12,7 @@ def getSortedErrors(logDatasPerLine,statusIndex,subStatusIndex,win32StatusIndex)
         sc_status = int(logDatasPerLine[index].split(" ")[statusIndex])
         subStatus = int(logDatasPerLine[index].split(" ")[subStatusIndex])
         win32Status = int(logDatasPerLine[index].split(" ")[win32StatusIndex])
+        #TODO sc_status と subStatus から先に IIS ログの該当する情報を引き抜く
         error= str(sc_status)+"."+str(subStatus)+"."+str(win32Status)
         if(error not in errors):
             errors.append(error)

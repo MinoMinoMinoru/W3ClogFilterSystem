@@ -123,7 +123,7 @@ def analyseIISLog(filteredData,statusIndex,subStatusIndex,win32StatusIndex,timeT
     reportText += iisLogAnalyseModules.getBasicInfoReport(settings,startTime,endTime)
     reportText += iisLogAnalyseModules.analyseLogFilteredbyStatus(filteredByStatusCodeData,statusIndex,subStatusIndex,win32StatusIndex,requestsCount)
     reportText += iisLogAnalyseModules.analyseLogFilteredbyTimeTaken(filteredByTimeTakenData,requestsCount,mean,stdev,threshold)
-    return reportText
+    return filteredByStatusCodeData,filteredByTimeTakenData,reportText
 
 def filterLogByFlag(logData,flag,inputFileName):
 
@@ -188,5 +188,15 @@ def filterLogByFlag(logData,flag,inputFileName):
 
     elif(flag==-99):
         print("test flag")
-        reportText = analyseIISLog(filteredLogData,statusIndex,subStatusIndex,win32StatusIndex,timeTakenIndex,startTime,endTime)
+        filteredByStatusCodeData,filteredByTimeTakenData,reportText = analyseIISLog(filteredLogData,statusIndex,subStatusIndex,win32StatusIndex,timeTakenIndex,startTime,endTime)
+        return str(reportText)
+    
+    elif(flag==100):
+        LogDataFilteredByStatusCode,LogDataFilteredByTimeTaken,reportText = analyseIISLog(filteredLogData,statusIndex,subStatusIndex,win32StatusIndex,timeTakenIndex,startTime,endTime)
+        
+        outputFileNameByStatusCode = filterName4Status+outputFileName
+        fileManager.outputIISFile(fileformat + LogDataFilteredByStatusCode+"\n",outputFileNameByStatusCode)
+
+        outputFileNameByTimeTaken = filterName4Time+outputFileName
+        fileManager.outputIISFile(fileformat + LogDataFilteredByTimeTaken+"\n",outputFileNameByTimeTaken)
         return str(reportText) 
