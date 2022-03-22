@@ -1,8 +1,8 @@
 {
-    "startTime":"2022-01-01 07:53",
+    "startTime":"2022-01-01 07:50",
     "endTime":"2022-01-01 08:00",
     "minError":400,
     "maxError":999,
-    "Output2Excel":false,
+    "Output2Excel":true,
     "timeTakenThreshold":500
 }
