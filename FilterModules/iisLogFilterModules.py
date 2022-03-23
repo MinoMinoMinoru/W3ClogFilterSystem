@@ -192,6 +192,7 @@ def filterLogByFlag(logData,flag,inputFileName):
         return str(reportText)
     
     elif(flag==100):
+        fileManager.outputIISFile(fileformat + filteredLogData,outputFileName)
         LogDataFilteredByStatusCode,LogDataFilteredByTimeTaken,reportText = analyseIISLog(filteredLogData,statusIndex,subStatusIndex,win32StatusIndex,timeTakenIndex,startTime,endTime)
         
         outputFileNameByStatusCode = filterName4Status+outputFileName
