@@ -14,6 +14,13 @@ def outputReport(writeText, writeFile):
         file.write(writeText)
     print("Output the file : "+writeFile)
 
+def outputEventReport(writeText, writeFile):
+    ''' ファイル書き込み '''
+    writeFile = './output/' + writeFile
+    with open(writeFile,'a',encoding='UTF-8') as file:
+        file.write(writeText)
+    print("Output the file : "+writeFile)
+
 def outputHttpErrorFile(writeText, writeFile):
     ''' ファイル書き込み '''
     writeFile = './output/httperrorlog/' + writeFile

@@ -3,6 +3,10 @@ import FilterModules.fileManager as fileManager
 import FilterModules.iisLogFilterModules as iisLogFilterModules
 import FilterModules.httpErrorLogFilterModules as httpErrorLogFilterModules
 
+#TODO: KHTML,+like+Gecko に対応する(csv にする時にだるい)
+# ,+like+Gecko -> +like+Gecko に変換したら良さそう(正式なあれとは異なるけど)
+
+# TODO:Mobile/15E148+Model/iPhone12,1+Cachatto にも対応
 
 flag = 100
 iisFileList=os.listdir("./input/iislog/")
