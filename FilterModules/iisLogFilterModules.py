@@ -14,19 +14,11 @@ minStatusCode,maxStatusCode = settings["minError"],settings["maxError"]
 
 def getTimeTakenThreshold(logData,timeTakenIndex):
     ''' time-taken の平均+標準偏差を返す(input:list,int/return:int)'''
-    index =0
     timeTakens=[]
 
-    # 最後に空行が入っているから調整
-    # for log in logData:
-    #     if(log!='\n'):
-    #         timeTaken=int(log.split(" ")[timeTakenIndex])
-    #     timeTakens.append(timeTaken)
-
-    while(index<len(logData)-1):
-        timeTaken=int(logData[index].split(" ")[timeTakenIndex])
+    for log in logData:
+        timeTaken=int(log.split(" ")[timeTakenIndex])
         timeTakens.append(timeTaken)
-        index=index+1
 
     return int(mean(timeTakens)),int(stdev(timeTakens)),int(mean(timeTakens)+stdev(timeTakens))
 
@@ -63,63 +55,26 @@ def getMatchTime(logData,targetTime,minutes):
         continue
     return matchTime,idx
 
-def filterLogByStatusCode(logData,statusIndex):
-    ''' FIlter by status code(input:string,int/return string)'''
-    logDatasPerLine=logData.split("\n")
-
-    outputData = ""
-
-    for log in logDatasPerLine:
-        sc_status = int(log.split(" ")[statusIndex])
-        if(minStatusCode<=sc_status and sc_status<=maxStatusCode):
-            outputData += log+"\n"
-        # if(log == '\n'):
-        #     break
-
-    return outputData
-
-def filterLogByTimetaken(logData,timeTakenIndex):
-    '''  filter by time-taken(input:string,int/return string)'''
-    logDatasPerLine=logData.split("\n")
-    mean,stdev,threshold=getTimeTakenThreshold(logDatasPerLine,timeTakenIndex)
-    
-    print("Mean:",mean)
-    print("Standard Deviation:",stdev)
-    print("Threshold:",threshold)
-
-    outputData = ""
-    index =0
-
-    # 最後に空行が入っているから調整
-    while(index<len(logDatasPerLine)-1):
-        timeTaken = int(logDatasPerLine[index].split(" ")[timeTakenIndex])
-        if(threshold<=timeTaken):
-            outputData += logDatasPerLine[index]+"\n"
-        index=index+1
-
-    return outputData
-
 def analyseIISLog(filteredData,statusIndex,subStatusIndex,win32StatusIndex,timeTakenIndex,startTime,endTime):
     logDatasPerLine=filteredData.split("\n")
+    logDatasPerLine.pop()
     mean,stdev,threshold=getTimeTakenThreshold(logDatasPerLine,timeTakenIndex)
 
     requestsCount = len(logDatasPerLine)
-    index,longCount,errorCount = 0,0,0
+    slowCount,errorCount = 0,0
     filteredByTimeTakenData,filteredByStatusCodeData = "",""
 
-    # 最後に空行が入っているから調整
-    while(index<len(logDatasPerLine)-1):
-        timeTaken = int(logDatasPerLine[index].split(" ")[timeTakenIndex])
-        sc_status = int(logDatasPerLine[index].split(" ")[statusIndex])
+    for log in logDatasPerLine:
+        timeTaken = int(log.split(" ")[timeTakenIndex])
+        sc_status = int(log.split(" ")[statusIndex])
 
         if(minStatusCode<=sc_status and sc_status<=maxStatusCode):
-            filteredByStatusCodeData += logDatasPerLine[index]+"\n"
+            filteredByStatusCodeData += log+"\n"
             errorCount += 1
         if(threshold<=timeTaken):
-            filteredByTimeTakenData += logDatasPerLine[index]+"\n"
-            longCount +=1
-        index+=1
-    
+            filteredByTimeTakenData += log+"\n"
+            slowCount +=1
+
     reportText = iisLogAnalyseModules.addReferences()
     reportText += iisLogAnalyseModules.getBasicInfoReport(settings,startTime,endTime)
     reportText += iisLogAnalyseModules.analyseLogFilteredbyStatus(filteredByStatusCodeData,statusIndex,subStatusIndex,win32StatusIndex,requestsCount)
@@ -140,20 +95,21 @@ def getformats(logData):
 
 def outputFilterdLogandReport(logData,inputFileName):
     fileformat,statusIndex,subStatusIndex,win32StatusIndex,timeTakenIndex = getformats(logData)
-
     startTime,endTime,filteredLogData = filterLogByTerm(logData)
+
     outputFileName = filterName4Term+inputFileName
+    outputFileNameByStatusCode,outputFileNameByTimeTaken = filterName4Status+outputFileName,filterName4Time+outputFileName
     
     fileManager.outputIISFile(fileformat + filteredLogData,outputFileName)
     LogDataFilteredByStatusCode,LogDataFilteredByTimeTaken,reportText = analyseIISLog(filteredLogData,statusIndex,subStatusIndex,win32StatusIndex,timeTakenIndex,startTime,endTime)
     
-    outputFileNameByStatusCode = filterName4Status+outputFileName
-    fileManager.outputIISFile(fileformat + LogDataFilteredByStatusCode,outputFileNameByStatusCode)
-
-    outputFileNameByTimeTaken = filterName4Time+outputFileName
+    fileManager.outputIISFile(fileformat + LogDataFilteredByStatusCode,outputFileNameByStatusCode) 
     fileManager.outputIISFile(fileformat + LogDataFilteredByTimeTaken,outputFileNameByTimeTaken)
     return str(reportText) 
 
+# ######
+# Don't use now
+# ######
 def removeFields(logData):
     ''' 既に出力済のファイルを読み込んだ時に filter 処理のために #Field を消して成型する用(return:string)'''
     idx = logData.find("#Fields:")
@@ -161,3 +117,41 @@ def removeFields(logData):
     # 2021 とかの Date ではじまるからそこで分割
     idx = logData.find("20")
     return logData[idx:].split("\n\n")[0]
+
+
+def filterLogByStatusCode(logData,statusIndex):
+    ''' FIlter by status code(input:string,int/return string)'''
+    logDatasPerLine=logData.split("\n")
+
+    outputData = ""
+
+    for log in logDatasPerLine:
+        sc_status = int(log.split(" ")[statusIndex])
+        if(minStatusCode<=sc_status and sc_status<=maxStatusCode):
+            outputData += log+"\n"
+        # if(log == '\n'):
+        #     break
+
+    return outputData
+
+def filterLogByTimetaken(logData,timeTakenIndex):
+    '''  filter by time-taken(input:string,int/return string)'''
+    logDatasPerLine=logData.split("\n")
+    logDatasPerLine.pop()
+    mean,stdev,threshold=getTimeTakenThreshold(logDatasPerLine,timeTakenIndex)
+    
+    print("Mean:",mean)
+    print("Standard Deviation:",stdev)
+    print("Threshold:",threshold)
+
+    outputData = ""
+    index =0
+
+    # 最後に空行が入っているから調整
+    while(index<len(logDatasPerLine)-1):
+        timeTaken = int(logDatasPerLine[index].split(" ")[timeTakenIndex])
+        if(threshold<=timeTaken):
+            outputData += logDatasPerLine[index]+"\n"
+        index=index+1
+
+    return outputData
