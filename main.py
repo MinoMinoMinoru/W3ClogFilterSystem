@@ -3,12 +3,11 @@ import FilterModules.fileManager as fileManager
 import FilterModules.iisLogFilterModules as iisLogFilterModules
 import FilterModules.httpErrorLogFilterModules as httpErrorLogFilterModules
 
-# iisFileList=os.listdir("./input/iislog/")
-# httpErrorFileList=os.listdir("./input/httperrorlog/")
-
-inputIisLogFileName = os.listdir("./input/iislog/")[0]
-iisLogData = fileManager.readLogFile("./input/iislog/"+inputIisLogFileName)
-print("Filter next iislog:",inputIisLogFileName)
+def getIISLogReport():
+    inputIisLogFileName = os.listdir("./input/iislog/")[0]
+    iisLogData = fileManager.readLogFile("./input/iislog/"+inputIisLogFileName)
+    print("Filter next iislog:",inputIisLogFileName)
+    return iisLogFilterModules.outputFilterdLogandReport(iisLogData,inputIisLogFileName)
 
 def getHttpErrorReport():
     inputHttpErrorLogFileName = os.listdir("./input/httperrorlog/")[0]
@@ -17,8 +16,9 @@ def getHttpErrorReport():
     return httpErrorLogFilterModules.outputFilterdLogandReport(httpErrorLogData,inputHttpErrorLogFileName)
 
 def main():
-    issReport = iisLogFilterModules.outputFilterdLogandReport(iisLogData,inputIisLogFileName)
-    httpErrorReport = getHttpErrorReport()
+    issReport,httpErrorReport = "# IISLog\n There is no iislog Report\n","# HTTPErrorLog\n There is no HTTP Error Report\n"
+    issReport = getIISLogReport()
+    # httpErrorReport = getHttpErrorReport()
     reportText = issReport + httpErrorReport
     fileManager.outputReport(reportText,"SimpleReport.md")
 

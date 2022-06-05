@@ -7,29 +7,28 @@ def getBasicInfoReport(settings,startTime,endTime):
 def getSortedErrors(logDatasPerLine,statusIndex,subStatusIndex,win32StatusIndex):
     errors,statusCounts,results = [],[],[]
 
-    index = 0
-    while(index<len(logDatasPerLine)-1):
-        sc_status = int(logDatasPerLine[index].split(" ")[statusIndex])
-        subStatus = int(logDatasPerLine[index].split(" ")[subStatusIndex])
-        win32Status = int(logDatasPerLine[index].split(" ")[win32StatusIndex])
+    for log in logDatasPerLine:
+        scStatus = int(log.split(" ")[statusIndex])
+        subStatus = int(log.split(" ")[subStatusIndex])
+        win32Status = int(log.split(" ")[win32StatusIndex])
+        error= f'{scStatus}.{subStatus}.{win32Status}'
         #TODO sc_status と subStatus から先に IIS ログの該当する情報を引き抜く
-        error= f'{sc_status}.{subStatus}.{win32Status}'
+        # ex 500.10 はこういうエラーみたいな情報を。
         if(error not in errors):
             errors.append(error)
             statusCounts.append(1)
         else:
             statusCounts[errors.index(error)] +=1
-        index+=1
-    
-    index = 0
-    while(index<len(errors)):
-        results.append([errors[index],statusCounts[index]])
-        index+=1
+
+    for index,error in enumerate(errors):
+        results.append([error,statusCounts[index]])
+
     results.sort()
     return results
 
 def analyseLogFilteredbyStatus(filteredData,statusIndex,subStatusIndex,win32StatusIndex,requestsCount):
     logDatasPerLine=filteredData.split("\n")
+    logDatasPerLine.pop()
     
     results = getSortedErrors(logDatasPerLine,statusIndex,subStatusIndex,win32StatusIndex)
     
