@@ -37,9 +37,9 @@ def getMatchTime(logData,targetTime,minutes):
         if(idx!= -1):
             matchTime = targetTime
             break
-        date_value = dt.datetime.strptime(targetTime, '%Y-%m-%d %H:%M')
-        date_value = date_value + dt.timedelta(minutes=minutes)
-        targetTime  = date_value.strftime('%Y-%m-%d %H:%M')
+        dateValue = dt.datetime.strptime(targetTime, '%Y-%m-%d %H:%M')
+        dateValue = dateValue + dt.timedelta(minutes=minutes)
+        targetTime  = dateValue.strftime('%Y-%m-%d %H:%M')
         continue
     return matchTime,idx
 
@@ -80,7 +80,7 @@ def getOfficialDescriptions():
 def getHttpErrorReport(filteredLogData,reasonIndex,startTime,endTime):
     errorTypes,errorCounts,errorDescriptions = analyseHttpErrorLog(filteredLogData,reasonIndex)
     reportText = "# Http Error\n"
-    reportText += "- Term  : "+str(startTime) +" - " + str(endTime) +"\n"
+    reportText += f'- Term  : {startTime} - {endTime}\n'
     reportText += "## Errors\n" + str("| ErrorType | Count | description |")+"\n"
     reportText +=str("|---|---|-------|")+"\n"
     index=0
@@ -89,12 +89,26 @@ def getHttpErrorReport(filteredLogData,reasonIndex,startTime,endTime):
         index+=1
     return reportText
 
-def filterLogByFlag(logData,flag,inputFileName):
-    # #Fields: date time c-ip c-port s-ip s-port cs-version cs-method cs-uri streamid sc-status s-siteid s-reason s-queuename 
+def getformats(logData):
     fileformat = logData.split("\n")[3]
+
     fieldElements = fileformat.split(" ")    
     reasonIndex = fieldElements.index("s-reason")-1
-    fileformat += '\r'
+    fileformat += '\n'
+
+    return fileformat,reasonIndex
+
+def outputFilterdLogandReport(logData,inputFileName):
+    fileformat,reasonIndex = getformats(logData)
+    startTime,endTime,filteredLogData =filterLogByTerm(logData)
+    outputFileName = filterName4Term+inputFileName
+
+    reportText = getHttpErrorReport(filteredLogData,reasonIndex,startTime,endTime)
+    fileManager.outputHttpErrorFile(fileformat + filteredLogData,outputFileName)
+    return str(reportText)
+
+def filterLogByFlag(logData,flag,inputFileName):
+    fileformat,reasonIndex = getformats(logData)
 
     startTime,endTime,filteredLogData =filterLogByTerm(logData)
     outputFileName = filterName4Term+inputFileName
@@ -113,4 +127,3 @@ def filterLogByFlag(logData,flag,inputFileName):
         reportText = getHttpErrorReport(filteredLogData,reasonIndex,startTime,endTime)
         fileManager.outputHttpErrorFile(fileformat + filteredLogData,outputFileName)
         return str(reportText)
-

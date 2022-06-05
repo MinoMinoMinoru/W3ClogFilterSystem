@@ -10,21 +10,21 @@ def readLogFile(file_name):
 def outputReport(writeText, writeFile):
     ''' ファイル書き込み '''
     writeFile = './output/' + writeFile
-    with open(writeFile,'a') as file:
+    with open(writeFile,'w') as file:
         file.write(writeText)
     print("Output the file : "+writeFile)
 
 def outputEventReport(writeText, writeFile):
     ''' ファイル書き込み '''
     writeFile = './output/' + writeFile
-    with open(writeFile,'a',encoding='UTF-8') as file:
+    with open(writeFile,'w',encoding='UTF-8') as file:
         file.write(writeText)
     print("Output the file : "+writeFile)
 
 def outputHttpErrorFile(writeText, writeFile):
     ''' ファイル書き込み '''
     writeFile = './output/httperrorlog/' + writeFile
-    with open(writeFile,'a') as file:
+    with open(writeFile,'w') as file:
         file.write(writeText)
     print("Output the file : "+writeFile)
 
@@ -39,9 +39,8 @@ def outputIISFile(writeText, writeFile):
         outputLogFile(writeText, writeFile)
 
 def outputLogFile(writeText, writeFile):
-    ''' ファイル書き込み '''
     writeFile = './output/iislog/' + writeFile
-    with open(writeFile,'a') as file:
+    with open(writeFile,'w',encoding='UTF-8') as file:
         file.write(writeText)
     print("Output the file : "+writeFile)
 
@@ -50,11 +49,11 @@ def outputXlsxFile(writeText, writeFile):
     '''pandas.core.frame.DataFrame という type を使うので csv にしてから変換'''
     writeFile = './output/iislog/'+writeFile +'.csv'
     writeText = writeText.replace(" ",",")
-    with open(writeFile,'a') as file:
+    with open(writeFile,'w',encoding='UTF-8') as file:
         file.write(writeText)
     print("Output the file : "+writeFile)
     data = pd.read_csv(writeFile)
-    data.to_excel(writeFile+'.xlsx', encoding='utf-8')
+    data.to_excel(writeFile+'.xlsx')
     print("Output the file : "+writeFile+'.xlsx')
 
 def getSetting():

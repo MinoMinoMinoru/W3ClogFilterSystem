@@ -3,7 +3,7 @@ import FilterModules.fileManager as fileManager
 import FilterModules.eventLogFilterModules as eventLogFilter
 
 def applicationEventTest():
-    eventLogFilter.filterApplicationEvents("./miito-app.evtx")
+    eventLogFilter.filterApplicationEvents("./input/applicationlog/miito-app.evtx")
 
 
 def mainTest():
@@ -16,4 +16,5 @@ def reportTest():
     fileManager.outputReport(reportText,"SimpleReport.md")
 
 # mainTest()
-reportTest()
+# reportTest()
+applicationEventTest()

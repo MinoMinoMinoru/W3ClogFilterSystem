@@ -1,8 +1,9 @@
 {
-    "startTime":"2021-12-17 00:00",
-    "endTime":"2021-12-17 23:50",
+    "startTime":"2022-01-04 10:05",
+    "endTime":"2022-01-04 10:25",
     "minError":400,
     "maxError":999,
+    "eventLogTimeZone":0,
     "Output2Excel":true,
     "timeTakenThreshold":500
 }
