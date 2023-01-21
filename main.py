@@ -16,9 +16,18 @@ def getHttpErrorReport():
     return httpErrorLogFilterModules.outputFilterdLogandReport(httpErrorLogData,inputHttpErrorLogFileName)
 
 def main():
+    settings = fileManager.getSetting()
     issReport,httpErrorReport = "# IISLog\n There is no iislog Report\n","# HTTPErrorLog\n There is no HTTP Error Report\n"
-    issReport = getIISLogReport()
-    httpErrorReport = getHttpErrorReport()
+    
+    if(settings['useIISLog']):
+        issReport = getIISLogReport()
+    else:
+        print("You set 'useIISLog' flse")
+        
+    if(settings['useHttpErrorLog']):
+        httpErrorReport = getHttpErrorReport()
+    else:
+        print("You set 'useHttpErrorLog' flse")
     reportText = issReport + httpErrorReport
     fileManager.outputReport(reportText,"SimpleReport.md")
 

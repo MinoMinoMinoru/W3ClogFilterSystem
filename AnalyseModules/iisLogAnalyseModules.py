@@ -54,3 +54,11 @@ def addReferences():
     reportText += "- [Win32Status](https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes--0-499-?redirectedfrom=MSDN#ERROR_BAD_COMMAND)\n"
     reportText += "- [HTTPErrorLog](https://docs.microsoft.com/en-us/troubleshoot/developer/webapps/aspnet/site-behavior-performance/error-logging-http-apis)\n"
     return reportText
+
+
+# def getReport(settings,startTime,endTime,filteredByStatusCodeData,statusIndex,subStatusIndex,win32StatusIndex,requestsCount):
+#     reportText = addReferences()
+#     reportText += getBasicInfoReport(settings,startTime,endTime)
+#     reportText += iisLogAnalyseModules.analyseLogFilteredbyStatus(filteredByStatusCodeData,statusIndex,subStatusIndex,win32StatusIndex,requestsCount)
+#     reportText += iisLogAnalyseModules.analyseLogFilteredbyTimeTaken(filteredByTimeTakenData,requestsCount,mean,stdev,threshold)
+#     return reportText

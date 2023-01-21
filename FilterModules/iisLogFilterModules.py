@@ -13,7 +13,7 @@ minStatusCode,maxStatusCode = settings["minError"],settings["maxError"]
 ''' 初期設定 ここまで'''
 
 def getTimeTakenThreshold(logData,timeTakenIndex):
-    ''' time-taken の平均+標準偏差を返す(input:list,int/return:int)'''
+    ''' Return Average and Stdev of time-taken (input:list,int/return:int)'''
     timeTakens=[]
 
     for log in logData:
@@ -26,10 +26,10 @@ def filterLogByTerm(logData):
     ''' 指定期間でフィルター(input/return:string)'''
     startTime,endTime = settings["startTime"],settings["endTime"]
     
-    # startTime より後ろを切り取る
+    # Cut after startTime
     startTime,idx = getMatchTime(logData,startTime,-1)
     logData = logData[idx:]
-    # endTime より前を切り取る
+    # Cut before endTime
     endTime,idx = getMatchTime(logData,endTime,1)
 
     print("Fitler from " + startTime)
@@ -82,6 +82,7 @@ def analyseIISLog(filteredData,statusIndex,subStatusIndex,win32StatusIndex,timeT
     return filteredByStatusCodeData,filteredByTimeTakenData,reportText
 
 def getformats(logData):
+    ''' get Log format(Fields) '''
     fileformat = logData.split("\n")[3]
 
     fieldElements = fileformat.split(" ")    
@@ -94,6 +95,7 @@ def getformats(logData):
     return fileformat,statusIndex,subStatusIndex,win32StatusIndex,timeTakenIndex
 
 def outputFilterdLogandReport(logData,inputFileName):
+    ''' filter term/status/time-takens and output report file'''
     fileformat,statusIndex,subStatusIndex,win32StatusIndex,timeTakenIndex = getformats(logData)
     startTime,endTime,filteredLogData = filterLogByTerm(logData)
 

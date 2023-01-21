@@ -8,21 +8,18 @@ def readLogFile(file_name):
     return data
 
 def outputReport(writeText, writeFile):
-    ''' ファイル書き込み '''
     writeFile = './output/' + writeFile
     with open(writeFile,'w') as file:
         file.write(writeText)
     print("Output the file : "+writeFile)
 
 def outputEventReport(writeText, writeFile):
-    ''' ファイル書き込み '''
     writeFile = './output/' + writeFile
     with open(writeFile,'w',encoding='UTF-8') as file:
         file.write(writeText)
     print("Output the file : "+writeFile)
 
 def outputHttpErrorFile(writeText, writeFile):
-    ''' ファイル書き込み '''
     writeFile = './output/httperrorlog/' + writeFile
     with open(writeFile,'w') as file:
         file.write(writeText)
@@ -32,13 +29,13 @@ def outputIISFile(writeText, writeFile):
     xlsxFlag = getSetting()["Output2Excel"]
     if xlsxFlag==True:
         print("Output .xlsx")
-        outputLogFile(writeText, writeFile)
+        outputPlaneLogFile(writeText, writeFile)
         outputXlsxFile(writeText, writeFile)
     else:
         print("Output plane log")
-        outputLogFile(writeText, writeFile)
+        outputPlaneLogFile(writeText, writeFile)
 
-def outputLogFile(writeText, writeFile):
+def outputPlaneLogFile(writeText, writeFile):
     writeFile = './output/iislog/' + writeFile
     with open(writeFile,'w',encoding='UTF-8') as file:
         file.write(writeText)

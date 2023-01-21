@@ -8,14 +8,6 @@ filterName4Status = "[filterted_by_StatusCode]"
 filterName4Time="[filterted_by_time-taken]"
 ''' 初期設定 ここまで'''
 
-def removeFields(logData):
-    ''' 既に出力済のファイルを読み込んだ時に filter 処理のために #Field を消して成型する用(return:string)'''
-    idx = logData.find("#Fields:")
-    logData = logData[idx:]
-    # 2021 とかの Date ではじまるからそこで分割
-    idx = logData.find("20")
-    return logData[idx:].split("\n\n")[0]
-
 def filterLogByTerm(logData):
     startTime,endTime = settings["startTime"],settings["endTime"]
     
@@ -91,6 +83,13 @@ def getformats(logData):
 
     return fileformat,reasonIndex
 
+def getLogTime(logData):
+    ''' get first & end Date of httpError log file '''
+    firstTime = logData.split("\n")[4].split(" ")
+    endTime = logData.split("\n")[-2].split(" ")
+    logFileTerm = f'{firstTime[0]} {firstTime[1]}  ~ {endTime[0]} {endTime[1]}'
+    return logFileTerm
+    
 def outputFilterdLogandReport(logData,inputFileName):
     fileformat,reasonIndex = getformats(logData)
     startTime,endTime,filteredLogData =filterLogByTerm(logData)
@@ -99,3 +98,14 @@ def outputFilterdLogandReport(logData,inputFileName):
     reportText = getHttpErrorReport(filteredLogData,reasonIndex,startTime,endTime)
     fileManager.outputHttpErrorFile(fileformat + filteredLogData,outputFileName)
     return str(reportText)
+
+# ######
+# Don't use now
+# ######
+def removeFields(logData):
+    ''' 既に出力済のファイルを読み込んだ時に filter 処理のために #Field を消して成型する用(return:string)'''
+    idx = logData.find("#Fields:")
+    logData = logData[idx:]
+    # 2021 とかの Date ではじまるからそこで分割
+    idx = logData.find("20")
+    return logData[idx:].split("\n\n")[0]

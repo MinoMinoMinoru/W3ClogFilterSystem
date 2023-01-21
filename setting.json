@@ -1,9 +1,11 @@
 {
-    "startTime":"2022-01-04 10:05",
-    "endTime":"2022-01-04 10:25",
+    "startTime":"2022-12-07 06:00",
+    "endTime":"2022-12-07 07:00",
     "minError":400,
     "maxError":999,
     "eventLogTimeZone":0,
     "Output2Excel":true,
+    "useIISLog":true,
+    "useHttpErrorLog":true,
     "timeTakenThreshold":500
 }
