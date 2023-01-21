@@ -8,8 +8,8 @@ filterName4Status = "[filterted_by_StatusCode]"
 filterName4Time="[filterted_by_time-taken]"
 ''' 初期設定 ここまで'''
 
-def filterLogByTerm(logData):
-    startTime,endTime = settings["startTime"],settings["endTime"]
+def filterLogByTerm(logData,startTime,endTime):
+    # startTime,endTime = settings["startTime"],settings["endTime"]
     
     # startTime より後ろを切り取る
     startTime,idx = getMatchTime(logData,startTime,-1)
@@ -90,9 +90,9 @@ def getLogTime(logData):
     logFileTerm = f'{firstTime[0]} {firstTime[1]}  ~ {endTime[0]} {endTime[1]}'
     return logFileTerm
     
-def outputFilterdLogandReport(logData,inputFileName):
+def outputFilterdLogandReport(logData,inputFileName,startTime,endTime):
     fileformat,reasonIndex = getformats(logData)
-    startTime,endTime,filteredLogData =filterLogByTerm(logData)
+    startTime,endTime,filteredLogData =filterLogByTerm(logData,startTime,endTime)
     outputFileName = filterName4Term+inputFileName
 
     reportText = getHttpErrorReport(filteredLogData,reasonIndex,startTime,endTime)

@@ -22,10 +22,8 @@ def getTimeTakenThreshold(logData,timeTakenIndex):
 
     return int(mean(timeTakens)),int(stdev(timeTakens)),int(mean(timeTakens)+stdev(timeTakens))
 
-def filterLogByTerm(logData):
+def filterLogByTerm(logData,startTime,endTime):
     ''' 指定期間でフィルター(input/return:string)'''
-    startTime,endTime = settings["startTime"],settings["endTime"]
-    
     # Cut after startTime
     startTime,idx = getMatchTime(logData,startTime,-1)
     logData = logData[idx:]
@@ -94,10 +92,10 @@ def getformats(logData):
 
     return fileformat,statusIndex,subStatusIndex,win32StatusIndex,timeTakenIndex
 
-def outputFilterdLogandReport(logData,inputFileName):
+def outputFilterdLogandReport(logData,inputFileName,startTime,endTime):
     ''' filter term/status/time-takens and output report file'''
     fileformat,statusIndex,subStatusIndex,win32StatusIndex,timeTakenIndex = getformats(logData)
-    startTime,endTime,filteredLogData = filterLogByTerm(logData)
+    startTime,endTime,filteredLogData = filterLogByTerm(logData,startTime,endTime)
 
     outputFileName = filterName4Term+inputFileName
     outputFileNameByStatusCode,outputFileNameByTimeTaken = filterName4Status+outputFileName,filterName4Time+outputFileName
