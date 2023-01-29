@@ -1,6 +1,7 @@
 import tkinter,os
+from tkinter import messagebox
 import FilterModules.fileManager as fileManager
-import FilterModules.getReports as getReports
+import AnalyseModules.getReports as getReports
 import GUIModules.checkInputDataModules as checkInputDataModules
 
 class Application(tkinter.Frame):
@@ -14,11 +15,11 @@ class Application(tkinter.Frame):
 
     def create_widgets(self):
         self.ShowTermChoice()
-        self.IISLogTerm()
-        self.httpErrorLogTerm()
+        self.ShowIISLogList()
+        self.ShowHttpErrorLogList()
         self.showBUttons()
 
-        self.testTextBoxs()
+        # self.testTextBoxs()
 
     def showBUttons(self):
         quit_btn = tkinter.Button(self,text="close Window")
@@ -39,7 +40,7 @@ class Application(tkinter.Frame):
         self.endDateBox = tkinter.Entry(self,width=100)
         self.endDateBox.pack()
 
-    def IISLogTerm(self):
+    def ShowIISLogList(self):
         self.iisFiles=[]
         inputIISLogFiles= os.listdir("./input/iislog/")
 
@@ -59,7 +60,7 @@ class Application(tkinter.Frame):
         self.list_iis_box.bind('<<ListboxSelect>>', lambda e:self.checkIISFilesList())
         self.list_iis_box.pack()
 
-    def httpErrorLogTerm(self):
+    def ShowHttpErrorLogList(self):
         self.httpErrorLogFiles=[]
         inputHttpErrorLogFiles= os.listdir("./input/httperrorlog/")
 
@@ -92,19 +93,18 @@ class Application(tkinter.Frame):
         self.SelectedHttpError.pack()
 
     def submit(self):
-        # TODO 確認ダイアログを作る(別メソッドのが良さそう)
         inputIISLogFileName = self.SelectedIIS['text']
         inputHttpErrorLogFileName = self.SelectedHttpError['text']
         startTime,endTime = self.startDateBox.get(),self.endDateBox.get()
 
-        self.submitMessage = tkinter.Message(self,width=350,text='Now Filtering')
-        self.submitMessage.pack()
+        flag = self.checkInputs()
+        if(flag==True):
+            # self.submitMessage = tkinter.Message(self,width=350,text='Now Filtering')
+            # self.submitMessage.pack()
+            getReports.getReports(inputIISLogFileName,inputHttpErrorLogFileName,startTime,endTime)
 
-        getReports.getReports(inputIISLogFileName,inputHttpErrorLogFileName,startTime,endTime)
+            messagebox.showinfo('Complete!','Please check your output directory')
 
-        self.submitMessage['text']='Completed!'
-        self.submitMessage['background']='lightgreen'
-        self.submitMessage.pack()
 
     def testTextBoxs(self):
         test_btn = tkinter.Button(self,text='Test output textbox')
@@ -112,24 +112,22 @@ class Application(tkinter.Frame):
         test_btn.pack()
         
     def checkInputs(self):
-        # len(errorMessage) が 0 だとエラーなし
+        # if len(errorMessage) = 0, there is no error
         errorMessage=""
         
         errorMessage +=checkInputDataModules.checkEmptyInput(self.startDateBox.get(),self.endDateBox.get(),self.SelectedIIS['text'],self.SelectedHttpError['text'])
-
-        # errorMessage +=self.getLogTerms()
         if(len(errorMessage)==0):
-            errorMessage +=self.getLogTerms()
+            errorMessage +=self.checkLogTerm()
+            if(len(errorMessage)==0):
+                return True
+            else :
+                messagebox.showinfo('There is error',errorMessage)
+                return False
         else :
-            print(errorMessage)
-        if(len(errorMessage)==0):
-            print("There is no error")
-        else :
-            print(errorMessage)
-            
-        # return warningMessage
+            messagebox.showinfo('There is error',errorMessage)
+            return False
 
-    def getLogTerms(self):
+    def checkLogTerm(self):
         term = self.iisFiles[self.selected_iis_index].split("|")[1].split(" ~ ")
         logStart,logEnd = term[0],term[1]
         startTime,endTime = self.startDateBox.get()+":00",self.endDateBox.get()+":00"

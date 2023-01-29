@@ -3,11 +3,6 @@ import FilterModules.fileManager as fileManager
 import FilterModules.httpErrorLogFilterModules as httpErrorLogFilterModules
 import os
 
-def applicationEventTest():
-    eventLogFilter.filterApplicationEvents("./input/applicationlog/miito-app.evtx")
-
-def mainTest():
-    Filteriislog.main()
 
 def reportTest():
     reportText = Filteriislog.testAnalyse()
