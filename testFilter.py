@@ -1,6 +1,5 @@
 # import testModules.Filteriislog as Filteriislog,testModules.FilterHttpError as FilterHttpError
 import FilterModules.fileManager as fileManager
-import FilterModules.eventLogFilterModules as eventLogFilter
 import FilterModules.httpErrorLogFilterModules as httpErrorLogFilterModules
 import os
 

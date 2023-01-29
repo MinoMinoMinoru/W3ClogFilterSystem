@@ -64,5 +64,5 @@ def getLogTime(logData):
     ''' get first & end Date of httpError log file '''
     firstTime = logData.split("\n")[4].split(" ")
     endTime = logData.split("\n")[-2].split(" ")
-    logFileTerm = f'{firstTime[0]} {firstTime[1]}  ~ {endTime[0]} {endTime[1]}'
+    logFileTerm = f'{firstTime[0]} {firstTime[1]} ~ {endTime[0]} {endTime[1]}'
     return logFileTerm
