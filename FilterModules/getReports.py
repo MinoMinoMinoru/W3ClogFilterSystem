@@ -4,8 +4,8 @@ import FilterModules.httpErrorLogFilterModules as httpErrorLogFilterModules
 
 def getReports(inputIisLogFileName,inputHttpErrorLogFileName,startTime,endTime):
     ''' call this method to get Repots and filterrd log'''
-    issReport = getReports.getIISLogReport(inputIisLogFileName,startTime,endTime)
-    httpErrorReport = getReports.getHttpErrorReport(inputHttpErrorLogFileName,startTime,endTime)
+    issReport = getIISLogReport(inputIisLogFileName,startTime,endTime)
+    httpErrorReport = getHttpErrorReport(inputHttpErrorLogFileName,startTime,endTime)
         
     reportText = issReport + httpErrorReport
     fileManager.outputReport(reportText,"SimpleReport.md")
