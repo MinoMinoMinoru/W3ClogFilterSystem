@@ -24,10 +24,13 @@ def getTimeTakenThreshold(logData,timeTakenIndex):
 
 def filterLogByTerm(logData,startTime,endTime):
     ''' 指定期間でフィルター(input/return:string)'''
-    # Cut after startTime
+    idx = logData.find('#Fields')
+    logData = logData[idx:]
+
+    # Get after startTime
     startTime,idx = getMatchTime(logData,startTime,-1)
     logData = logData[idx:]
-    # Cut before endTime
+    # Get before endTime
     endTime,idx = getMatchTime(logData,endTime,1)
 
     print("Fitler from " + startTime)

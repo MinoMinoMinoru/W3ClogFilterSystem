@@ -102,9 +102,7 @@ class Application(tkinter.Frame):
             # self.submitMessage = tkinter.Message(self,width=350,text='Now Filtering')
             # self.submitMessage.pack()
             getReports.getReports(inputIISLogFileName,inputHttpErrorLogFileName,startTime,endTime)
-
-            messagebox.showinfo('Complete!','Please check your output directory')
-
+            messagebox.showinfo('Complete Filtering!','Let\'s check your output directory.')
 
     def testTextBoxs(self):
         test_btn = tkinter.Button(self,text='Test output textbox')
@@ -130,7 +128,7 @@ class Application(tkinter.Frame):
     def checkLogTerm(self):
         term = self.iisFiles[self.selected_iis_index].split("|")[1].split(" ~ ")
         logStart,logEnd = term[0],term[1]
-        startTime,endTime = self.startDateBox.get()+":00",self.endDateBox.get()+":00"
+        startTime,endTime = self.startDateBox.get()+":01",self.endDateBox.get()+":00"
         return checkInputDataModules.checkInputsBoforeSubmit(logStart,logEnd,startTime,endTime)
 
 root = tkinter.Tk()
