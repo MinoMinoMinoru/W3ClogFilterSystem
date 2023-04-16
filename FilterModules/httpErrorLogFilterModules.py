@@ -1,12 +1,11 @@
 import datetime as dt
 import FilterModules.fileManager as fileManager
+import FilterModules.resources.httpErrorReference as httpErrorReference
 
-''' 初期設定 '''
 settings = fileManager.getSetting()
 filterName4Term ="[filterted_by_term]"
 filterName4Status = "[filterted_by_StatusCode]"
 filterName4Time="[filterted_by_time-taken]"
-''' 初期設定 ここまで'''
 
 def filterLogByTerm(logData,startTime,endTime):
     # Get after #Fields 
@@ -53,11 +52,12 @@ def analyseHttpErrorLog(filteredData,reasonIndex):
     return errorTypes,errorCounts,errorDescriptions
 
 def getOfficialDescriptions():
-    memos = fileManager.readLogFile("./FilterModules/resources/httpErrors.txt")
-    tmp = memos.split("\n")
+    # memos = fileManager.readLogFile("./FilterModules/resources/httpErrors.txt")
+    # tmp = memos.split("\n")
+    errors = httpErrorReference.Erors
     errorTypes,errorDescriptions =[],[]
 
-    for error in tmp:
+    for error in errors:
         errorTypes.append(error.split(":")[0])
         errorDescriptions.append(error.split(":")[1])
 

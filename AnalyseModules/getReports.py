@@ -11,7 +11,7 @@ def getReports(inputIisLogFileName,inputHttpErrorLogFileName,startTime,endTime):
         httpErrorReport = getHttpErrorReport(inputHttpErrorLogFileName,startTime,endTime)
         
     reportText = issReport + httpErrorReport
-    fileManager.outputPlaneFile('./output/'+reportText,"SimpleReport.md")
+    fileManager.outputPlaneFile(reportText,'./output/SimpleReport.md')
     # fileManager.outputReport(reportText,"SimpleReport.md")
 
 def getIISLogReport(file,startTime,endTime):

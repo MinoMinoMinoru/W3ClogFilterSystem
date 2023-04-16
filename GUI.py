@@ -4,8 +4,6 @@ import FilterModules.fileManager as fileManager
 import AnalyseModules.getReports as getReports
 import GUIModules.checkInputDataModules as checkInputDataModules
 
-# TODO : iislog と httperror の List に None を追加する。その場合は対応するログについては実施しない。
-
 class Application(tkinter.Frame):
     def __init__(self,root=None):
         super().__init__(root,width=840,height=640,borderwidth=1,relief='groove')
@@ -22,10 +20,9 @@ class Application(tkinter.Frame):
         self.showBUttons()
 
     def showBUttons(self):
-        quit_btn = tkinter.Button(self,text="close Window")
-        quit_btn['command']=self.root.destroy
+        # quit_btn = tkinter.Button(self,text="close Window")
+        # quit_btn['command']=self.root.destroy
         # quit_btn.pack(anchor=tkinter.W)
-        quit_btn.pack(anchor=tkinter.W)
 
         submit_btn = tkinter.Button(self,text='Start Filtering')
         submit_btn['command']=self.submit
@@ -108,8 +105,7 @@ class Application(tkinter.Frame):
 
         flag = self.checkInputs()
         if(flag==True):
-            # self.submitMessage = tkinter.Message(self,width=350,text='Now Filtering')
-            # self.submitMessage.pack()
+            #TODO:show windows message that filer start and do process at background
             getReports.getReports(inputIISLogFileName,inputHttpErrorLogFileName,startTime,endTime)
             messagebox.showinfo('Complete Filtering!','Let\'s check your output directory.')
 

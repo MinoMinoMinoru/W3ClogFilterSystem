@@ -1,5 +1,11 @@
 input/
 output/
+build/
+dist/
+AnalyseModules/__pychache__/
 FilterModules/__pychache__/
+FilterModules/resources/__pychache__/
+GUIModules/__pychache__/
 testMemo.txt
 kernprof.py
+setup.py

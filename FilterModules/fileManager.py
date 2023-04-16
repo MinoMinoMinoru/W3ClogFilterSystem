@@ -18,17 +18,17 @@ def outputIISFile(writeText, writeFile):
     writeFile = './output/iislog/' + writeFile
     if xlsxFlag==True:
         print("Output .xlsx")
-        outputPlaneLogFile(writeText, writeFile)
+        outputPlaneFile(writeText, writeFile)
         outputXlsxFile(writeText, writeFile)
     else:
         print("Output plane log")
-        outputPlaneLogFile(writeText, writeFile)
+        outputPlaneFile(writeText, writeFile)
 
 def outputHttpErrorFile(writeText, writeFile):
     writeFile = './output/httperrorlog/' + writeFile
-    outputPlaneLogFile(writeText, writeFile)
+    outputPlaneFile(writeText, writeFile)
 
-def outputPlaneLogFile(writeText, writeFile):
+def outputPlaneFile(writeText, writeFile):
     with open(writeFile,'w',encoding='UTF-8') as file:
         file.write(writeText)
     print("Output the file : "+writeFile)
