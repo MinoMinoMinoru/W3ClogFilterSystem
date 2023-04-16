@@ -16,13 +16,17 @@ def checkSelectedLog(input,kind):
 
 def checkEmptyInput(inputStartDate,inputEndDate,inputIISFile,inputHttpErrorFile):
     errorMessage=""
+    
     errorMessage+=checkDateFormats(inputStartDate,"startDate")
     errorMessage+=checkDateFormats(inputEndDate,"endDate")
-    errorMessage+=checkSelectedLog(inputIISFile,"IIS Log")
-    errorMessage+=checkSelectedLog(inputHttpErrorFile,"HttpError Log")
+
+    if(inputIISFile!='None'):
+        errorMessage+=checkSelectedLog(inputIISFile,"IIS Log")
+    if(inputHttpErrorFile!='None'):
+        errorMessage+=checkSelectedLog(inputHttpErrorFile,"HttpError Log")
     return errorMessage
 
-def checkInputsBoforeSubmit(logStartTime,logEndTime,startTime,endTime):
+def checkInputsBoforeSubmit(logStartTime,logEndTime,startTime,endTime,logkind):
     errorMessage = ""
     try:
         logStartTime,logEndTime = dt.datetime.strptime(logStartTime, '%Y-%m-%d %H:%M:%S'),dt.datetime.strptime(logEndTime, '%Y-%m-%d %H:%M:%S')
@@ -34,11 +38,10 @@ def checkInputsBoforeSubmit(logStartTime,logEndTime,startTime,endTime):
         #TODO フィルターの開始時刻を入力のにする？でもダルイから入れなおしてもらうで良い気がする
         print(f'hogehoge')
     if(endTime<logStartTime):
-        errorMessage+=f'- you input later end time than log start time as filter time.'+'\n'
+        errorMessage+=f'- [{logkind}]end time you input > log start time.'+'\n'
     if(startTime>logEndTime):
-        errorMessage+=f'- you input later start time than log end time as filter time.'+'\n'
+        errorMessage+=f'- [{logkind}]start time you input < log end time.'+'\n'
     if(startTime>endTime):
-        errorMessage+=f'- you input later start time than end time.'+'\n'
+        errorMessage+=f'- [{logkind}]start time you input > end time you input.'+'\n'
     # print('errorMessage at checkInputsBoforeSubmit:\n',errorMessage)
     return errorMessage
-

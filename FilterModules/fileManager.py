@@ -13,20 +13,9 @@ def outputReport(writeText, writeFile):
         file.write(writeText)
     print("Output the file : "+writeFile)
 
-def outputEventReport(writeText, writeFile):
-    writeFile = './output/' + writeFile
-    with open(writeFile,'w',encoding='UTF-8') as file:
-        file.write(writeText)
-    print("Output the file : "+writeFile)
-
-def outputHttpErrorFile(writeText, writeFile):
-    writeFile = './output/httperrorlog/' + writeFile
-    with open(writeFile,'w') as file:
-        file.write(writeText)
-    print("Output the file : "+writeFile)
-
 def outputIISFile(writeText, writeFile):
     xlsxFlag = getSetting()["Output2Excel"]
+    writeFile = './output/iislog/' + writeFile
     if xlsxFlag==True:
         print("Output .xlsx")
         outputPlaneLogFile(writeText, writeFile)
@@ -35,8 +24,11 @@ def outputIISFile(writeText, writeFile):
         print("Output plane log")
         outputPlaneLogFile(writeText, writeFile)
 
+def outputHttpErrorFile(writeText, writeFile):
+    writeFile = './output/httperrorlog/' + writeFile
+    outputPlaneLogFile(writeText, writeFile)
+
 def outputPlaneLogFile(writeText, writeFile):
-    writeFile = './output/iislog/' + writeFile
     with open(writeFile,'w',encoding='UTF-8') as file:
         file.write(writeText)
     print("Output the file : "+writeFile)
@@ -44,7 +36,7 @@ def outputPlaneLogFile(writeText, writeFile):
 def outputXlsxFile(writeText, writeFile):
     ''' .xlsx ファイル書き込み '''
     '''pandas.core.frame.DataFrame という type を使うので csv にしてから変換'''
-    writeFile = './output/iislog/'+writeFile +'.csv'
+    writeFile = writeFile +'.csv'
     writeText = writeText.replace(" ",",")
     with open(writeFile,'w',encoding='UTF-8') as file:
         file.write(writeText)
@@ -54,7 +46,6 @@ def outputXlsxFile(writeText, writeFile):
     print("Output the file : "+writeFile+'.xlsx')
 
 def getSetting():
-    ''' jsonファイルから情報取得 '''
     f = open("./setting.json", 'r')
     json_body = json.load(f)
     f.close()

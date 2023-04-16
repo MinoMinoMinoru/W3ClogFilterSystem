@@ -9,12 +9,13 @@ filterName4Time="[filterted_by_time-taken]"
 ''' 初期設定 ここまで'''
 
 def filterLogByTerm(logData,startTime,endTime):
-    # startTime,endTime = settings["startTime"],settings["endTime"]
-    
-    # startTime より後ろを切り取る
+    # Get after #Fields 
+    idx = logData.find('#Fields')
+    logData = logData[idx:]
+    # Get after startTime 
     startTime,idx = getMatchTime(logData,startTime,-1)
     logData = logData[idx:]
-    # endTime より前を切り取る
+    # Get before endTime
     endTime,idx = getMatchTime(logData,endTime,1)
     print("Fitler from " + startTime)
     print("Fitler to " + endTime)

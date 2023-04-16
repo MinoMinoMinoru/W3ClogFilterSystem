@@ -4,13 +4,11 @@ import datetime as dt
 import FilterModules.fileManager as fileManager
 import AnalyseModules.iisLogAnalyseModules as iisLogAnalyseModules
 
-''' 初期設定 '''
 settings = fileManager.getSetting()
 filterName4Term ="[filterted_by_term]"
 filterName4Status = "[filterted_by_StatusCode]"
 filterName4Time="[filterted_by_time-taken]"
 minStatusCode,maxStatusCode = settings["minError"],settings["maxError"]
-''' 初期設定 ここまで'''
 
 def getTimeTakenThreshold(logData,timeTakenIndex):
     ''' Return Average and Stdev of time-taken (input:list,int/return:int)'''
@@ -23,7 +21,8 @@ def getTimeTakenThreshold(logData,timeTakenIndex):
     return int(mean(timeTakens)),int(stdev(timeTakens)),int(mean(timeTakens)+stdev(timeTakens))
 
 def filterLogByTerm(logData,startTime,endTime):
-    ''' 指定期間でフィルター(input/return:string)'''
+    ''' input:string/return:string'''
+    # Get after #Fields
     idx = logData.find('#Fields')
     logData = logData[idx:]
 
@@ -44,7 +43,7 @@ def filterLogByTerm(logData,startTime,endTime):
     return startTime,endTime,filterdLog
 
 def getMatchTime(logData,targetTime,minutes):
-    ''' modify the time when filter time doesn't match the log '''
+    ''' Modify the time when filter time doesn't match the log '''
     while(True):
         idx = logData.find(targetTime)
         if(idx!= -1):
@@ -57,6 +56,7 @@ def getMatchTime(logData,targetTime,minutes):
     return matchTime,idx
 
 def analyseIISLog(filteredData,statusIndex,subStatusIndex,win32StatusIndex,timeTakenIndex,startTime,endTime):
+    ''' Return filteredData by status code and timetaken / Report'''
     logDatasPerLine=filteredData.split("\n")
     logDatasPerLine.pop()
     mean,stdev,threshold=getTimeTakenThreshold(logDatasPerLine,timeTakenIndex)

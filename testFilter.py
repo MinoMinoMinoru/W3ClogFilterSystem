@@ -1,3 +1,5 @@
+''' This fike is for test.NOT used at product.'''
+
 # import testModules.Filteriislog as Filteriislog,testModules.FilterHttpError as FilterHttpError
 import FilterModules.fileManager as fileManager
 import FilterModules.httpErrorLogFilterModules as httpErrorLogFilterModules
